@@ -1,6 +1,6 @@
 //
 //  RNAuthLibLectio.swift
-//  LectioApp
+//  LectioGo
 //
 //  Created by Mathias Gredal on 22/09/2020.
 //

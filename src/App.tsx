@@ -19,7 +19,7 @@ import {
   IAuthenticationResponse,
   GetDetailedLessonInfo,
   GetBriefTimetable,
-} from '@mathiasgredal/liblectio/lib';
+} from 'liblectio';
 
 //@ts-ignore
 const {RNAuthLibLectio} = NativeModules;

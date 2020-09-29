@@ -994,24 +994,6 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@mathiasgredal/liblectio@0.0.17":
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/@mathiasgredal/liblectio/-/liblectio-0.0.17.tgz#b2fd715c9729d74449bb1779cad23d7cb5ffcad8"
-  integrity sha512-iKmdNatCRrNDayPJf3bRyYr11pzn9wzMSWUFrPBlnV4VFsYFiu3d4Of3hyVKntUNOmmwvoLkLS6dBeElgJUbQg==
-  dependencies:
-    axios "^0.19.2"
-    axios-cookiejar-support "^0.5.1"
-    buffer "^5.6.0"
-    date-fns "^2.11.1"
-    events "^3.2.0"
-    qs "^6.9.3"
-    react-native-cheerio "^1.0.0-rc.4"
-    stream "0.0.2"
-    tough-cookie "^4.0.0"
-    url "^0.11.0"
-    util "^0.12.3"
-    utils "^0.3.1"
-
 "@react-native-community/cli-debugger-ui@^4.9.0":
   version "4.9.0"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli-debugger-ui/-/cli-debugger-ui-4.9.0.tgz#4177764ba69243c97aa26829d59d9501acb2bd71"
@@ -4675,6 +4657,24 @@ levn@^0.3.0, levn@~0.3.0:
   dependencies:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
+
+liblectio@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/liblectio/-/liblectio-0.0.1.tgz#d38dbdd8ceb38151f000c440c57199114203200b"
+  integrity sha512-D07rHckSbpR17MFe/AhlaAFaLjfzRQGNLWlpOb30wLqZM3s9qWiYHF+IveWR8tGuOUmYe751EqytvaO2EEwgcg==
+  dependencies:
+    axios "^0.19.2"
+    axios-cookiejar-support "^0.5.1"
+    buffer "^5.6.0"
+    date-fns "^2.11.1"
+    events "^3.2.0"
+    qs "^6.9.3"
+    react-native-cheerio "^1.0.0-rc.4"
+    stream "0.0.2"
+    tough-cookie "^4.0.0"
+    url "^0.11.0"
+    util "^0.12.3"
+    utils "^0.3.1"
 
 lines-and-columns@^1.1.6:
   version "1.1.6"
