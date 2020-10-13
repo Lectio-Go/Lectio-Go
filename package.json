@@ -9,7 +9,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "liblectio": "0.0.1",
+    "liblectio": "0.0.12",
     "react": "16.13.1",
     "react-native": "0.63.2"
   },

@@ -9,6 +9,8 @@ target 'LectioGo' do
   pod 'Alamofire', '~> 5.2'
 
 
+  pod 'react-native-cookies', :path => '../node_modules/@react-native-community/cookies'
+
   target 'LectioGoTests' do
     inherit! :complete
     # Pods for testing

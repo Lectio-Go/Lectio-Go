@@ -1,6 +1,3 @@
-/* eslint-disable react/self-closing-comp */
-/* eslint-disable react-native/no-inline-styles */
-
 import React, {Component} from 'react';
 import {
   StyleSheet,
@@ -9,7 +6,6 @@ import {
   Text,
   TextInput,
   StatusBar,
-  NativeModules,
   Button,
 } from 'react-native';
 
@@ -21,25 +17,8 @@ import {
   GetBriefTimetable,
 } from 'liblectio';
 
-//@ts-ignore
-const {RNAuthLibLectio} = NativeModules;
+import {RNRequest} from './RNLectioRequest'
 
-function authRequest(
-  url: string,
-  body: IRequestBody,
-  cookies: string,
-): Promise<IAuthenticationResponse> {
-  return new Promise((resolve, _reject) => {
-    RNAuthLibLectio.doRequest(
-      url,
-      body,
-      cookies,
-      (response: string, responsecookies: string) => {
-        resolve({text: response, cookies: responsecookies});
-      },
-    );
-  });
-}
 
 interface Props {}
 
@@ -51,14 +30,18 @@ interface State {
   outText: string;
 }
 
+let requestHelper: RNRequest = new RNRequest();
+
+
 export default class App extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
+
     this.state = {
       user: new AuthenticatedUser('', '', ''),
       username: '',
       password: '',
-      schoolID: '165',
+      schoolID: '',
       outText: '',
     };
   }
@@ -69,21 +52,15 @@ export default class App extends Component<Props, State> {
       this.state.password,
       this.state.schoolID,
     );
-
-    user
-      .Authenticate(authRequest)
-      .then(async () => {
-        GetBriefTimetable(user, 2020, 40)
-          .catch((error) => console.log('ERROR:' + error))
-          .then((result) => {
-            this.setState({
-              outText: JSON.stringify(result, null, 2),
-            });
-          });
-      })
-      .catch((error) => {
-        console.log(`ERROR: ${error}`);
+    try {
+      await user.Authenticate(requestHelper)
+      let result = await GetBriefTimetable(user, requestHelper, 2020, 40);
+      this.setState({
+        outText: JSON.stringify(result, null, 2),
       });
+    } catch (error) {
+      console.log(`ERROR: ${error}`);
+    }
   };
 
   render() {

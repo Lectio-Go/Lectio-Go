@@ -1683,6 +1683,14 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.10.1.tgz#e1e82e4f3e999e2cfd61b161280d16a111f86428"
   integrity sha512-zg7Hz2k5lI8kb7U32998pRRFin7zJlkfezGJjUc2heaD4Pw2wObakCDVzkKztTm/Ln7eiVvYsjqak0Ed4LkMDA==
 
+axios-cookiejar-support-react-native@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/axios-cookiejar-support-react-native/-/axios-cookiejar-support-react-native-1.0.0.tgz#94eac448eb61faec68ac5aafc94f2b6739127d6c"
+  integrity sha512-PzevqRCfYgNd6qwdSve7SkjwVngWI4ypUzX2LyuyDciucsOrEqDGYLlZx430QRO5yHy0l5GQ4PhiWjMLYG+bNA==
+  dependencies:
+    is-redirect "^1.0.0"
+    pify "^5.0.0"
+
 axios-cookiejar-support@^0.5.1:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/axios-cookiejar-support/-/axios-cookiejar-support-0.5.1.tgz#0622c2849cefbaf8424a50b630283231b62fc277"
@@ -4658,13 +4666,14 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-liblectio@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/liblectio/-/liblectio-0.0.1.tgz#d38dbdd8ceb38151f000c440c57199114203200b"
-  integrity sha512-D07rHckSbpR17MFe/AhlaAFaLjfzRQGNLWlpOb30wLqZM3s9qWiYHF+IveWR8tGuOUmYe751EqytvaO2EEwgcg==
+liblectio@0.0.12:
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/liblectio/-/liblectio-0.0.12.tgz#fc95ae1d260333583ca42e2612b268fef280f526"
+  integrity sha512-OrmYyeO9acoRrDaLz6Q2dbQeoW7Vu9AVKmOQ0OmA+aQQvT2yAhekTV3Yhqa3KsM9UKjv5eikm7lVrRIi4nk/hw==
   dependencies:
     axios "^0.19.2"
     axios-cookiejar-support "^0.5.1"
+    axios-cookiejar-support-react-native "^1.0.0"
     buffer "^5.6.0"
     date-fns "^2.11.1"
     events "^3.2.0"
@@ -5724,6 +5733,11 @@ pify@^4.0.0, pify@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/pify/-/pify-4.0.1.tgz#4b2cd25c50d598735c50292224fd8c6df41e3231"
   integrity sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==
+
+pify@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/pify/-/pify-5.0.0.tgz#1f5eca3f5e87ebec28cc6d54a0e4aaf00acc127f"
+  integrity sha512-eW/gHNMlxdSP6dmG6uJip6FXN0EQBwm2clYYd8Wul42Cwu/DK8HEftzsapcNdYe2MfLiIwZqsDk2RDEsTE79hA==
 
 pirates@^4.0.0, pirates@^4.0.1:
   version "4.0.1"
