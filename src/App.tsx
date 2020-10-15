@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { View, Text } from 'react-native';
+
+
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Login } from './screens/login'
@@ -7,17 +9,33 @@ import { Login } from './screens/login'
 
 const Stack = createStackNavigator();
 
+
 function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen 
+        name="Login" 
+        component={Login} 
+        options={{
+          title: 'Lectio Go',
+          headerStyle: {
+            backgroundColor: 'rgb(30,30,70)',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}/>
+
+
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
 export default App;
+
 /*
 import { NavigationContainer } from '@react-navigation/native';
 
