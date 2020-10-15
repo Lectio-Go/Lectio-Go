@@ -1,3 +1,10 @@
+import 'react-native-gesture-handler';
+
+
+
+
+
+
 /**
  * @format
  */
@@ -7,3 +14,6 @@ import App from './src/App';
 import {name as appName} from './app.json';
 
 AppRegistry.registerComponent(appName, () => App);
+
+
+

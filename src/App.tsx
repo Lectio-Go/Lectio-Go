@@ -1,4 +1,27 @@
-import React, {Component} from 'react';
+import * as React from 'react';
+import { View, Text } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { Login } from './screens/login'
+
+
+const Stack = createStackNavigator();
+
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Login" component={Login} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+export default App;
+/*
+import { NavigationContainer } from '@react-navigation/native';
+
+import * as React from 'react';
 import {
   StyleSheet,
   ScrollView,
@@ -32,8 +55,17 @@ interface State {
 
 let requestHelper: RNRequest = new RNRequest();
 
+export default function App() {
+  return (
+    <NavigationContainer>{/* Rest of your app code */ /*    }</NavigationContainer>
+  );
+}
 
-export default class App extends Component<Props, State> {
+
+
+
+/*
+export class App extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -178,3 +210,4 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
 });
+*/
