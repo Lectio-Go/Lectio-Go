@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Text, TextInput, Button, View, StyleSheet} from 'react-native';
+import React, {Component, useRef} from 'react';
+import {Text, TextInput, Button, View, StyleSheet, Platform} from 'react-native';
 
 import {ISchool, GetAllSchools} from 'liblectio';
 
@@ -14,44 +14,18 @@ import LoginButton from '../components/LoginButton';
 import {TransitionPresets, createStackNavigator} from '@react-navigation/stack';
 import SearchBar from 'react-native-search-bar';
 
-import Icon from 'react-native-ionicons';
-import BottomSheet from '@gorhom/bottom-sheet';
-
 import {
   HeaderButtons,
   HeaderButton,
   Item,
 } from 'react-navigation-header-buttons';
 import {DefaultTheme} from '@react-navigation/native';
-import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
-import {ScrollView} from 'react-native-gesture-handler';
+
+import { CollapsibleHeaderFlatList } from 'react-native-collapsible-header-views';
+import { SchoolPicker } from '../components/SchoolPicker';
 
 const Stack = createStackNavigator();
 
-@observer
-export class PickerScreen extends Component {
-  @observable search = '';
-  render() {
-    return (
-      <View>
-        <SearchBar
-          searchBarStyle="minimal"
-          ref="searchBar"
-          placeholder="Search"
-          onChangeText={(text) => {
-            console.log(text);
-          }}
-          onSearchButtonPress={() => {
-            console.log('Search');
-          }}
-          onCancelButtonPress={() => {
-            console.log('Cancel');
-          }}
-        />
-      </View>
-    );
-  }
-}
 
 export class LoginNavigator extends Component {
   render() {
@@ -75,7 +49,7 @@ export class LoginNavigator extends Component {
         />
         <Stack.Screen
           name="Picker"
-          component={PickerScreen}
+          component={SchoolPicker}
           options={{
             headerShown: true,
             headerTitle: 'Vælg Skole',
@@ -104,7 +78,6 @@ interface LoginScreenProps {
 @inject('lectio')
 @observer
 export class LoginScreen extends Component<LoginScreenProps, {}> {
-  sheetRef = React.createRef<BottomSheet>();
   @observable username = '';
   @observable password = '';
   @observable schoolList: ISchool[] = [];
