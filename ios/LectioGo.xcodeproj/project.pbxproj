@@ -14,8 +14,8 @@
 		17659831C50AD2F4F74B2542 /* libPods-LectioGo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D9B1B93B5A7C1DD00350708 /* libPods-LectioGo.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A8DD7290C4C02E364525D9E2 /* libPods-LectioGo-LectioGoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D3E66237F7C0650FA992C40 /* libPods-LectioGo-LectioGoTests.a */; };
-		DA8B907C2523BFEE00A73BD7 /* RNAuthLibLectio.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8B907B2523BFEE00A73BD7 /* RNAuthLibLectio.swift */; };
-		DA8B907E2523C00200A73BD7 /* RNAuthLibLectio.m in Sources */ = {isa = PBXBuildFile; fileRef = DA8B907D2523C00200A73BD7 /* RNAuthLibLectio.m */; };
+		DA8B907C2523BFEE00A73BD7 /* RNLectioRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8B907B2523BFEE00A73BD7 /* RNLectioRequest.swift */; };
+		DA8B907E2523C00200A73BD7 /* RNLectioRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DA8B907D2523C00200A73BD7 /* RNLectioRequest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,8 +46,8 @@
 		6D3E66237F7C0650FA992C40 /* libPods-LectioGo-LectioGoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LectioGo-LectioGoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = LectioGo/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DA8B907A2523BFED00A73BD7 /* LectioGo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "LectioGo-Bridging-Header.h"; path = "LectioGo/LectioGo-Bridging-Header.h"; sourceTree = "<group>"; };
-		DA8B907B2523BFEE00A73BD7 /* RNAuthLibLectio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RNAuthLibLectio.swift; path = LectioGo/RNAuthLibLectio.swift; sourceTree = "<group>"; };
-		DA8B907D2523C00200A73BD7 /* RNAuthLibLectio.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = RNAuthLibLectio.m; path = LectioGo/RNAuthLibLectio.m; sourceTree = "<group>"; };
+		DA8B907B2523BFEE00A73BD7 /* RNLectioRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RNLectioRequest.swift; path = LectioGo/RNLectioRequest.swift; sourceTree = "<group>"; };
+		DA8B907D2523C00200A73BD7 /* RNLectioRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = RNLectioRequest.m; path = LectioGo/RNLectioRequest.m; sourceTree = "<group>"; };
 		DC9A5DDBFF69C42C741A5CD9 /* Pods-LectioGo-LectioGoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LectioGo-LectioGoTests.release.xcconfig"; path = "Target Support Files/Pods-LectioGo-LectioGoTests/Pods-LectioGo-LectioGoTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -100,9 +100,9 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
-				DA8B907B2523BFEE00A73BD7 /* RNAuthLibLectio.swift */,
+				DA8B907B2523BFEE00A73BD7 /* RNLectioRequest.swift */,
 				DA8B907A2523BFED00A73BD7 /* LectioGo-Bridging-Header.h */,
-				DA8B907D2523C00200A73BD7 /* RNAuthLibLectio.m */,
+				DA8B907D2523C00200A73BD7 /* RNLectioRequest.m */,
 			);
 			name = LectioGo;
 			sourceTree = "<group>";
@@ -389,8 +389,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA8B907C2523BFEE00A73BD7 /* RNAuthLibLectio.swift in Sources */,
-				DA8B907E2523C00200A73BD7 /* RNAuthLibLectio.m in Sources */,
+				DA8B907C2523BFEE00A73BD7 /* RNLectioRequest.swift in Sources */,
+				DA8B907E2523C00200A73BD7 /* RNLectioRequest.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);

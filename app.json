@@ -1,4 +1,7 @@
 {
   "name": "LectioGo",
-  "displayName": "Lectio Go"
+  "displayName": "Lectio Go",
+  "ios": {
+    "userInterfaceStyle": "automatic"
+  }
 }

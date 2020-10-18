@@ -6,10 +6,12 @@
 //
 
 #import "React/RCTBridgeModule.h"
-@interface RCT_EXTERN_MODULE(RNAuthLibLectio, NSObject)
-RCT_EXTERN_METHOD(doRequest: (NSString)url
-                  withBody:(NSDictionary *)body
-                  withCookie:(NSString)cookie
-                  withCallback:(RCTResponseSenderBlock)callback)
+@interface RCT_EXTERN_MODULE(RNLectioRequest, NSObject)
 
+RCT_EXTERN_METHOD(GetLectio: (NSString)url
+                  withCallback: (RCTResponseSenderBlock)callback)
+
+RCT_EXTERN_METHOD(PostLectio: (NSString)url
+                  withBody:(NSDictionary *)body
+                  withCallback:(RCTResponseSenderBlock)callback)
 @end
