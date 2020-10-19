@@ -1,8 +1,7 @@
-import { autorun, computed, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import ThemeStore from '../stores/ThemeStore';
+import ThemeStore from '../../stores/ThemeStore';
 
 interface LoginButtonProps {
   name: string;
