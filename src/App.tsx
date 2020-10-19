@@ -15,7 +15,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {AppearanceProvider} from 'react-native-appearance';
 
 // State managment
-import {Provider} from 'mobx-react';
+import {observer, Provider} from 'mobx-react';
 import stores from './stores';
 
 // Screens
@@ -25,7 +25,9 @@ import {OverflowMenuProvider} from 'react-navigation-header-buttons';
 
 const Stack = createStackNavigator();
 
+@observer
 export default class App extends Component {
+
   render() {
     return (
       <SafeAreaProvider>
@@ -33,7 +35,7 @@ export default class App extends Component {
           <Provider {...stores}>
             <NavigationContainer
               theme={
-                stores.lectio.colorscheme === 'dark' ? DarkTheme : DefaultTheme
+                stores.theme.colorscheme === 'dark' ? DarkTheme : DefaultTheme
               }>
               <OverflowMenuProvider>
                 <Stack.Navigator initialRouteName="Login">

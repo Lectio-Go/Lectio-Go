@@ -9,7 +9,6 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@gorhom/bottom-sheet": "^1.4.1",
     "liblectio": "0.0.12",
     "mobx": "^5.0.1",
     "mobx-react": "^5.0.0",
@@ -20,6 +19,7 @@
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-ionicons": "^4.x",
+    "react-native-keychain": "^6.2.0",
     "react-native-reanimated": "^1.13.1",
     "react-native-safe-area-context": "^3.1.8",
     "react-native-screens": "^2.11.0",

@@ -1,37 +1,27 @@
-import React, {Component, useRef} from 'react';
-import {Text, TextInput, Button, View, StyleSheet, Platform} from 'react-native';
+import React, {Component} from 'react';
+import {Text, Button, View, StyleSheet, Alert} from 'react-native';
 
-import {ISchool, GetAllSchools} from 'liblectio';
+import {NavigationScreenProp} from 'react-navigation';
+import {DefaultTheme, NavigationProp} from '@react-navigation/native';
+import {TransitionPresets, createStackNavigator} from '@react-navigation/stack';
+import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 
-import LectioStore from '../stores/LectioStore';
 import {action, computed, observable} from 'mobx';
 import {inject, observer} from 'mobx-react';
-import {NavigationScreenProp} from 'react-navigation';
+import ThemeStore from '../stores/ThemeStore';
+import LectioStore from '../stores/LectioStore';
 
-import LoginField from '../components/LoginField';
-import LoginButton from '../components/LoginButton';
-
-import {TransitionPresets, createStackNavigator} from '@react-navigation/stack';
-import SearchBar from 'react-native-search-bar';
-
-import {
-  HeaderButtons,
-  HeaderButton,
-  Item,
-} from 'react-navigation-header-buttons';
-import {DefaultTheme} from '@react-navigation/native';
-
-import { CollapsibleHeaderFlatList } from 'react-native-collapsible-header-views';
-import { SchoolPicker } from '../components/SchoolPicker';
+import LoginField from '../components/Login/LoginField';
+import LoginButton from '../components/Login/LoginButton';
+import SchoolPicker from '../components/Login/SchoolPicker';
 
 const Stack = createStackNavigator();
-
 
 export class LoginNavigator extends Component {
   render() {
     return (
       <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName="LoginScreen"
         screenOptions={({route, navigation}) => ({
           gestureEnabled: true,
           cardOverlayEnabled: true,
@@ -43,12 +33,12 @@ export class LoginNavigator extends Component {
         })}
         mode="modal">
         <Stack.Screen
-          name="Home"
+          name="LoginScreen"
           component={LoginScreen}
           options={{headerTitle: 'Log Ind'}}
         />
         <Stack.Screen
-          name="Picker"
+          name="SchoolPicker"
           component={SchoolPicker}
           options={{
             headerShown: true,
@@ -57,7 +47,7 @@ export class LoginNavigator extends Component {
             headerRight: () => (
               <HeaderButtons>
                 <Item
-                  title="Done"
+                  title="Færdig"
                   color={DefaultTheme.colors.primary}
                   onPress={() => console.log('search')}
                 />
@@ -72,18 +62,19 @@ export class LoginNavigator extends Component {
 
 interface LoginScreenProps {
   lectio: LectioStore;
-  navigation: NavigationScreenProp<any, any>;
+  theme: ThemeStore;
+  navigation: NavigationProp<any>;
 }
 
+@inject('theme')
 @inject('lectio')
 @observer
 export class LoginScreen extends Component<LoginScreenProps, {}> {
   @observable username = '';
   @observable password = '';
-  @observable schoolList: ISchool[] = [];
 
-  @computed get enableLoginButton(): boolean {
-    if (this.username.length > 3 && this.password.length > 3) {
+  @computed get enableLoginButton() : boolean {
+    if (this.username.length > 3 && this.password.length > 3 && this.props.lectio.school != -1) {
       return true;
     } else {
       return false;
@@ -91,11 +82,22 @@ export class LoginScreen extends Component<LoginScreenProps, {}> {
   }
 
   async componentDidMount() {
-    this.schoolList = await GetAllSchools();
+    this.props.lectio.GetSchoolList();
+
     // Check async storage to see if we are logged in
     // If we are logged in, we should redirect to homescreen, where we can check whether those login credentials are correct
     // Else we should just continue showing this screen
   }
+
+  @computed get getSchoolName(): string {
+    if(this.props.lectio.school === -1)
+      return "Vælg Skole";
+    else {
+      const schoolList = this.props.lectio!.schoolList;
+      const school = schoolList.filter(school => {return school.id === String(this.props.lectio.school)})[0]
+      return school.name;
+    }
+  } 
 
   render() {
     return (
@@ -107,7 +109,7 @@ export class LoginScreen extends Component<LoginScreenProps, {}> {
           }}
           value={this.username}
           secure={false}
-          theme={this.props.lectio.colors}
+          theme={this.props.theme}
         />
         <LoginField
           name="ADGANGSKODE"
@@ -116,31 +118,40 @@ export class LoginScreen extends Component<LoginScreenProps, {}> {
           }}
           value={this.password}
           secure={true}
-          theme={this.props.lectio.colors}
+        />
+        <LoginField
+          name="SKOLE"
+          value={this.getSchoolName}
+          disabled={true}
+          onPress={() => {
+            // We recieve the selected school through the lectioStore, which is a bit spaghetti
+            this.props.navigation.navigate('SchoolPicker');
+          }}
         />
         <LoginButton
           name={'Log ind'}
           disabled={!this.enableLoginButton}
-          theme={this.props.lectio.colors}
-          onPress={() => {
-            console.log('Log ind');
+          onPress={async () => {
+            const loginResponse = await this.props.lectio.login(this.username, this.password, String(this.props.lectio.school));
+            if(loginResponse === 'success') {
+              this.props.navigation.reset({
+                index: 0,
+                routes: [{ name: 'Home' }],
+              });
+            }
+            else
+              alert(loginResponse);
           }}
-        />
-        <Button
-          title={'Open Picker'}
-          onPress={() => {
-            this.props.navigation.navigate('Picker');
-          }}
+          theme={this.props.theme}
         />
       </View>
     );
   }
 
-  // Declared here for dynamic theming, there might be an easier way
-  colors = this.props.lectio.colors.colors;
+  colors = this.props.theme.colors;
   styles = StyleSheet.create({
     container: {
-      paddingTop: 12,
+      paddingTop: 15,
       justifyContent: 'center',
       paddingHorizontal: '20%',
     },

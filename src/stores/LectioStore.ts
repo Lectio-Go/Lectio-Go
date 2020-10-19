@@ -1,45 +1,34 @@
 import {observable, computed, action} from 'mobx';
-import {AuthenticatedUser, ISchool} from 'liblectio';
+import {AuthenticatedUser, GetAllSchools, ISchool, GetBriefTimetable} from 'liblectio';
 import {LectioRequest} from 'liblectio/lib/LectioRequest';
 import {RNRequest} from '../RNLectioRequest';
-import {Appearance, ColorSchemeName} from 'react-native-appearance';
-import {StyleSheet} from 'react-native';
-import {DarkTheme, DefaultTheme, Theme} from '@react-navigation/native';
-
 export default class LectioStore {
-  constructor() {
-    this.colorscheme = Appearance.getColorScheme();
-    if (this.colorscheme === 'dark') {
-      this.colors = DarkTheme;
-    } else {
-      this.colors = DefaultTheme;
-    }
-  }
-
-  // Themes
-  @observable colorscheme: ColorSchemeName;
-  @observable colors: Theme = DefaultTheme;
-  @computed get styles() {
-    return StyleSheet.create({
-      button: {
-        color: this.colors.colors.text,
-        height: 40,
-      },
-    });
-  }
-
-  // Lectio
-  @observable school: ISchool = {id: '-1', name: 'Select School'};
+  @observable school: number = -1; // This is a spaghetti demon
+  @observable signedIn: boolean = false;
   @observable user: AuthenticatedUser = new AuthenticatedUser('', '', '');
   @observable requestHelper: LectioRequest = new RNRequest();
 
-  @action async login() {
-    // this.user = new AuthenticatedUser(
-    //   this.username,
-    //   this.password,
-    //   this.school.id,
-    // );
-    // await this.user.Authenticate(this.requestHelper);
+  @observable schoolList: ISchool[] = [];
+
+  @action async GetSchoolList() {
+    this.schoolList = await GetAllSchools();
+  }
+
+  @action async login(username: string, password: string, schoolID: string): Promise<string> {
+    this.user = new AuthenticatedUser(
+      username,
+      password,
+      schoolID
+    );
+
+    return new Promise((resolve) => {
+      this.user.Authenticate(this.requestHelper).then(()=> {
+        this.signedIn = true;
+        resolve('success');
+      }).catch(error => {
+        resolve(`ERROR: ${error.message}`);
+      });
+    });
   }
 
   @action async indlæsLectioSkema() {
