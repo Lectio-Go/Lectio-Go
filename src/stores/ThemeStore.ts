@@ -1,6 +1,6 @@
 import {observable, computed, action} from 'mobx';
 import {Appearance, ColorSchemeName} from 'react-native-appearance';
-import {DevSettings, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {DarkTheme, DefaultTheme, Theme} from '@react-navigation/native';
 import { NavigationScreenProp } from 'react-navigation';
 

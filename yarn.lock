@@ -5565,10 +5565,10 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-liblectio@0.0.12:
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/liblectio/-/liblectio-0.0.12.tgz#fc95ae1d260333583ca42e2612b268fef280f526"
-  integrity sha512-OrmYyeO9acoRrDaLz6Q2dbQeoW7Vu9AVKmOQ0OmA+aQQvT2yAhekTV3Yhqa3KsM9UKjv5eikm7lVrRIi4nk/hw==
+liblectio@0.0.14:
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/liblectio/-/liblectio-0.0.14.tgz#719d880d24b43fc0e934558d21317bf0dade02d2"
+  integrity sha512-CMr7BSXTGAhOUPVWbPIBUkVkJZPS28R1mtgA+4ECC1FocSncf8+ffThITkQJEUGKNyimy9JOUZBOD47AhbylBw==
   dependencies:
     axios "^0.19.2"
     axios-cookiejar-support "^0.5.1"

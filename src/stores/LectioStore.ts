@@ -1,29 +1,65 @@
 import {observable, computed, action} from 'mobx';
+import * as Keychain from 'react-native-keychain';
 import {AuthenticatedUser, GetAllSchools, ISchool, GetBriefTimetable} from 'liblectio';
 import {LectioRequest} from 'liblectio/lib/LectioRequest';
 import {RNRequest} from '../RNLectioRequest';
+import { Lesson } from 'liblectio/lib/Skema/Timetable';
+
+
+
 export default class LectioStore {
-  @observable school: number = -1; // This is a spaghetti demon
+  @observable username: string = "";
+  @observable password: string = "";
+  @observable school: number = -1;
+  
   @observable signedIn: boolean = false;
+
   @observable user: AuthenticatedUser = new AuthenticatedUser('', '', '');
   @observable requestHelper: LectioRequest = new RNRequest();
 
-  @observable schoolList: ISchool[] = [];
 
+  @observable schoolList: ISchool[] = [];
   @action async GetSchoolList() {
     this.schoolList = await GetAllSchools();
   }
 
-  @action async login(username: string, password: string, schoolID: string): Promise<string> {
+  @observable lessonList: Lesson[] = [];
+  @action async GetBriefLessonList(year: number, week: number) {
+    // We should check whether we are logged in before making an api request
+    this.lessonList = await (await GetBriefTimetable(this.user, this.requestHelper, year, week)).lessons;
+  }
+
+  async isLoggedIn(): Promise<boolean> {
+    const credentials = await Keychain.getGenericPassword();
+    if(credentials) {
+      this.username = JSON.parse(credentials.username)[0];
+      this.password = credentials.password;
+      this.school = JSON.parse(credentials.username)[1];
+      this.signedIn = true;
+
+      this.user = new AuthenticatedUser(
+        this.username,
+        this.password,
+        String(this.school)
+      );
+      return true;
+    }
+
+    return false;
+  }
+
+  @action async login(): Promise<string> {
     this.user = new AuthenticatedUser(
-      username,
-      password,
-      schoolID
+      this.username,
+      this.password,
+      String(this.school)
     );
 
     return new Promise((resolve) => {
-      this.user.Authenticate(this.requestHelper).then(()=> {
+      this.user.Authenticate(this.requestHelper).then(async ()=> {
         this.signedIn = true;
+        // Since generic password only can store username and password, we put the school id into the username
+        await Keychain.setGenericPassword(JSON.stringify([this.username, this.school]), this.password);
         resolve('success');
       }).catch(error => {
         resolve(`ERROR: ${error.message}`);

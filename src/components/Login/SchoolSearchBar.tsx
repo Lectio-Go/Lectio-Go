@@ -1,14 +1,18 @@
+import { inject } from "mobx-react";
 import React, { Component } from "react";
 import SearchBar from "react-native-search-bar";
+import ThemeStore from "../../stores/ThemeStore";
 
 
-export default class SchoolSearchBar extends Component<{ onChangeText: (text: string) => void }, {}> {
+@inject('theme')
+export default class SchoolSearchBar extends Component<{ theme: ThemeStore, onChangeText: (text: string) => void }, {}> {
     render() {
       return (
         <SearchBar
           searchBarStyle="default"
           ref="searchBar"
           placeholder="Search"
+          textColor={this.props.theme.colors.text}
           onChangeText={this.props.onChangeText}
         />
       )

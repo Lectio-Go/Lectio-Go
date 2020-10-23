@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, Button, View, StyleSheet, Alert} from 'react-native';
+import {Text, Button, View, StyleSheet, Alert, Keyboard} from 'react-native';
 
 import {NavigationScreenProp} from 'react-navigation';
 import {DefaultTheme, NavigationProp} from '@react-navigation/native';
@@ -132,6 +132,7 @@ export class LoginScreen extends Component<LoginScreenProps, {}> {
           name={'Log ind'}
           disabled={!this.enableLoginButton}
           onPress={async () => {
+            Keyboard.dismiss();
             const loginResponse = await this.props.lectio.login(this.username, this.password, String(this.props.lectio.school));
             if(loginResponse === 'success') {
               this.props.navigation.reset({

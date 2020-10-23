@@ -28,7 +28,7 @@ class Item extends Component<{ onPress: (school: number) => void,item: number, t
             <ListItem.Content>
               <ListItem.Title>{this.props.lectio!.schoolList.filter(school => {return school.id === String(this.props.item)})[0].name}</ListItem.Title>
             </ListItem.Content>
-            <ListItem.Chevron name='chevron-forward-outline' />
+            <ListItem.Chevron type='ionicon' name='chevron-forward-outline' />
           </ListItem>
       </TouchableHighlight>
     </ThemeProvider>

@@ -26,13 +26,13 @@ const LoginField = (props: LoginFieldProps) => {
         color: colors.primary,
         fontWeight: 'bold',
         fontSize: 10,
+        marginBottom: -3,
       },
       textinput: {
-        marginVertical: 5,
-        paddingBottom: 5,
+        paddingBottom: 3,
         fontSize: 16,
         color: colors.text,
-        height: 25,
+        height: 30,
         borderBottomColor: colors.border,
         borderBottomWidth: 1,
       },
@@ -49,6 +49,7 @@ const LoginField = (props: LoginFieldProps) => {
             secureTextEntry={props.secure}
             autoCapitalize={'none'}
             autoCorrect={false}
+            {...(props.disabled ? {selection: {start:0, end:0}} : {})}            
           />
         </View>
       </TouchableOpacity>
