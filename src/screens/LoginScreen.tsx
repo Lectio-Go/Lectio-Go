@@ -70,11 +70,9 @@ interface LoginScreenProps {
 @inject('lectio')
 @observer
 export class LoginScreen extends Component<LoginScreenProps, {}> {
-  @observable username = '';
-  @observable password = '';
 
   @computed get enableLoginButton() : boolean {
-    if (this.username.length > 3 && this.password.length > 3 && this.props.lectio.school != -1) {
+    if (this.props.lectio.username.length > 3 && this.props.lectio.password.length > 3 && this.props.lectio.school != -1) {
       return true;
     } else {
       return false;
@@ -82,7 +80,7 @@ export class LoginScreen extends Component<LoginScreenProps, {}> {
   }
 
   async componentDidMount() {
-    this.props.lectio.GetSchoolList();
+    await this.props.lectio.GetSchoolList();
 
     // Check async storage to see if we are logged in
     // If we are logged in, we should redirect to homescreen, where we can check whether those login credentials are correct
@@ -90,13 +88,14 @@ export class LoginScreen extends Component<LoginScreenProps, {}> {
   }
 
   @computed get getSchoolName(): string {
-    if(this.props.lectio.school === -1)
-      return "Vælg Skole";
-    else {
+    if(this.props.lectio.school !== -1) {
       const schoolList = this.props.lectio!.schoolList;
       const school = schoolList.filter(school => {return school.id === String(this.props.lectio.school)})[0]
-      return school.name;
+      if(school != undefined)
+        return school.name;
     }
+
+    return "Vælg Skole";
   } 
 
   render() {
@@ -105,18 +104,18 @@ export class LoginScreen extends Component<LoginScreenProps, {}> {
         <LoginField
           name="BRUGERNAVN"
           onChangeText={(text) => {
-            this.username = text;
+            this.props.lectio.username = text;
           }}
-          value={this.username}
+          value={this.props.lectio.username}
           secure={false}
           theme={this.props.theme}
         />
         <LoginField
           name="ADGANGSKODE"
           onChangeText={(text) => {
-            this.password = text;
+            this.props.lectio.password = text;
           }}
-          value={this.password}
+          value={this.props.lectio.password}
           secure={true}
         />
         <LoginField
@@ -133,8 +132,9 @@ export class LoginScreen extends Component<LoginScreenProps, {}> {
           disabled={!this.enableLoginButton}
           onPress={async () => {
             Keyboard.dismiss();
-            const loginResponse = await this.props.lectio.login(this.username, this.password, String(this.props.lectio.school));
+            const loginResponse = await this.props.lectio.login();
             if(loginResponse === 'success') {
+              
               this.props.navigation.reset({
                 index: 0,
                 routes: [{ name: 'Home' }],
