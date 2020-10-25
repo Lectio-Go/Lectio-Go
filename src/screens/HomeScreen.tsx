@@ -5,31 +5,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { action, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import LectioStore from '../stores/LectioStore';
+import { SkemaScreen } from './SkemaScreen';
+
 
 const Tab = createBottomTabNavigator();
 
-@inject('lectio')
-@observer
-export class SkemaScreen extends Component<{lectio: LectioStore}> {
-  @observable text = "";
-
-  async componentDidMount() {
-    // Here we should fetch the timetable
-    try {
-      await this.props.lectio.GetBriefLessonList(2020, 43);
-    } catch (error) {
-      alert("ERROR: " + error)
-    }
-  }
-
-  render() {
-    return (
-      <Text>
-        {this.text}
-      </Text>
-    );
-  }
-}
 
 export class LektieScreen extends Component {
   render() {
