@@ -4,6 +4,7 @@ import {AuthenticatedUser, GetAllSchools, ISchool, GetBriefTimetable} from 'libl
 import {LectioRequest} from 'liblectio/lib/LectioRequest';
 import {RNRequest} from '../RNLectioRequest';
 import { Lesson } from 'liblectio/lib/Skema/Timetable';
+import { cos } from 'react-native-reanimated';
 
 
 
@@ -30,8 +31,10 @@ export default class LectioStore {
   }
 
   async isLoggedIn(): Promise<boolean> {
+    console.log("Hello")
     const credentials = await Keychain.getGenericPassword();
     if(credentials) {
+      console.log("Passwword: " + credentials.password)
       this.username = JSON.parse(credentials.username)[0];
       this.password = credentials.password;
       this.school = JSON.parse(credentials.username)[1];
@@ -44,6 +47,8 @@ export default class LectioStore {
       );
       return true;
     }
+    console.log("Flase")
+
 
     return false;
   }
