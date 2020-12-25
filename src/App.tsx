@@ -22,11 +22,18 @@ import stores from './stores';
 import HomeScreen from './screens/HomeScreen';
 import {LoginNavigator} from './screens/LoginScreen';
 import {OverflowMenuProvider} from 'react-navigation-header-buttons';
+import { observable } from 'mobx';
 
 const Stack = createStackNavigator();
 
 @observer
 export default class App extends Component {
+
+  @observable initialScreen = "";
+
+  async componentDidMount() {
+    this.initialScreen = (await stores.lectio.isLoggedIn())? "Home" : "Login"
+  }
 
   render() {
     return (
@@ -38,7 +45,7 @@ export default class App extends Component {
                 stores.theme.colorscheme === 'dark' ? DarkTheme : DefaultTheme
               }>
               <OverflowMenuProvider>
-                <Stack.Navigator initialRouteName={stores.lectio.isLoggedIn()? "Home" : "Login"}>
+                <Stack.Navigator initialRouteName={this.initialScreen}>
                   <Stack.Screen name="Home" component={HomeScreen} />
                   <Stack.Screen
                     name="Login"
