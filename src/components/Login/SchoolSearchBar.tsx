@@ -6,13 +6,13 @@ import ThemeStore from "../../stores/ThemeStore";
 
 
 @inject('theme')
-export default class SchoolSearchBar extends Component<{ theme: ThemeStore, onChangeText: (text: string) => void }, {}> {
+export default class SchoolSearchBar extends Component<{ theme?: ThemeStore, onChangeText: (text: string) => void }, {}> {
     render() {
       return (
         <SearchBar
           searchBarStyle="default"
           placeholder="Search"
-          textColor={this.props.theme.colors.text}
+          textColor={this.props.theme!.colors.text}
           onChangeText={this.props.onChangeText}
         />
       )

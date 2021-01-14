@@ -80,6 +80,7 @@ export class LoginScreen extends Component<LoginScreenProps, {}> {
   }
 
   async componentDidMount() {
+    console.log("login");
     await this.props.lectio.GetSchoolList();
 
     // Check async storage to see if we are logged in

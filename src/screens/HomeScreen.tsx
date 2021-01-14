@@ -6,6 +6,7 @@ import { action, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import LectioStore from '../stores/LectioStore';
 import { SkemaScreen } from './SkemaScreen';
+import OpgaveScreen from './OpgaveScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -34,6 +35,7 @@ export class HomeScreen extends Component<{lectio: LectioStore}> {
       <Tab.Navigator>
         <Tab.Screen name="Skema" component={SkemaScreen} />
         <Tab.Screen name="Lektie" component={LektieScreen} />
+        <Tab.Screen name="Opgaver" component={OpgaveScreen} />
       </Tab.Navigator>
     );
   }

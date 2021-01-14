@@ -5,6 +5,7 @@ import {LectioRequest} from 'liblectio/lib/LectioRequest';
 import {RNRequest} from '../RNLectioRequest';
 import { Lesson } from 'liblectio/lib/Skema/Timetable';
 import { cos } from 'react-native-reanimated';
+import { hentOpgaver, Opgave } from 'liblectio/lib/Opaver/opgaver';
 
 
 
@@ -30,8 +31,13 @@ export default class LectioStore {
     this.lessonList = await (await GetBriefTimetable(this.user, this.requestHelper, year, week)).lessons;
   }
 
+  @observable opgaveList: Opgave[] = [];
+  @action async GetOpgaver() {
+    this.opgaveList = await hentOpgaver(this.user, this.requestHelper);
+  }
+
   async isLoggedIn(): Promise<boolean> {
-    console.log("Hello")
+    console.log("Hello");
     const credentials = await Keychain.getGenericPassword();
     if(credentials) {
       console.log("Passwword: " + credentials.password)
