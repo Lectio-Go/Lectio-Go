@@ -11,6 +11,7 @@ export interface Colors {
     text: string;
     border: string;
     notification: string;
+    skemaRubrik: string;
 };
 
 export interface ThemeProps {
@@ -26,7 +27,7 @@ export default class ThemeStore {
     } else {
       this.theme = DefaultTheme;
     }
-    this.colors = {...this.theme.colors}
+    this.colors = {...this.theme.colors, skemaRubrik: "#0080FF"}
 
     // Listen to check if colorscheme has changed
     setInterval(()=>{

@@ -2,6 +2,8 @@ import { observable } from "mobx";
 import { inject, observer } from "mobx-react";
 import React, { Component } from "react";
 import { Button, ScrollView, StyleSheet, Text, View } from "react-native";
+import { PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
+import SkemaBrik from "../components/skema/SkemaBrik"
 import LectioStore from "../stores/LectioStore";
 import ThemeStore from "../stores/ThemeStore";
 
@@ -22,9 +24,9 @@ export class SkemaScreen extends Component<SkemaScreenProps> {
     // Here we should fetch the timetable
     let now = new Date();
     let onejan = new Date(now.getFullYear(), 0, 1);
-    let week = 49; //Math.ceil( (((now.getTime() - onejan.getTime()) / 86400000) + onejan.getDay() + 1) / 7 );
+    let week = 3;//Math.ceil( (((now.getTime() - onejan.getTime()) / 86400000) + onejan.getDay() + 1) / 7 );
     try {
-      await this.props.lectio.GetBriefLessonList(2020, week);
+      await this.props.lectio.GetBriefLessonList(2021, week);
     } catch (error) {
       alert("ERROR: " + error)
     }
@@ -39,20 +41,30 @@ export class SkemaScreen extends Component<SkemaScreenProps> {
   render() {
     return (
 
-      <ScrollView horizontal={true} pagingEnabled={true} showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}>
-        {/* <View  style={{flex: 1, flexDirection: 'row' }}> */}
-        {/* <Text> */}
-        <View
-          style={{ flex: 1, alignItems: 'flex-start', backgroundColor: 'yellow', flexDirection: 'row' }}>
-          {this.items}
+      //<ScrollView horizontal={true} pagingEnabled={true} showsVerticalScrollIndicator={false}
+      //  showsHorizontalScrollIndicator={false} style={{flex: 1}}>
+      <View style={{ flex: 1, flexDirection: "column", alignItems: "stretch" }}>
+        { this.props.lectio.lessonList.map((lesson, i) => {
+          let pauseDuration = 0;
+          if (i + 1 < this.props.lectio.lessonList.length)
+          {
+            pauseDuration = (this.props.lectio.lessonList![i + 1].start.getTime() - lesson.stop.getTime()) / (3600 * 1000);
+          }
+          
+          
+          return (
+            <>
+              <SkemaBrik lesson={lesson} />
+              <View style={{height: pauseDuration * 80}}/>
+            </>
+          )
+        })
 
-          {/* </Text> */}
-        </View>
+        }
+      </View>
 
-        {/* </View> */}
 
-      </ScrollView>
+      //</ScrollView>
     )
   }
 
