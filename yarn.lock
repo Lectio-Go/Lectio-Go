@@ -5671,10 +5671,10 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-liblectio@0.0.21:
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/liblectio/-/liblectio-0.0.21.tgz#1a7268974dc2a5f56f3f58649e144b02f3642f45"
-  integrity sha512-0HEg1+9evdqW/Rd7MigSgS1mMeJXcUatkAwVrNYWTdBlTuNWhwG+EOvytGqIpZvxMi225E5oKT59FPw0qL11qA==
+liblectio@0.0.22:
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/liblectio/-/liblectio-0.0.22.tgz#ec080572bbee7a5d2b05f8bbf0628e1134865e88"
+  integrity sha512-WPTNgTExa5IucXpq2bJeKQoJKNWBSC4Y3A0Ha8L6TBTdt/sIWGJPWA7L/g/lsgAMwu9bYlIWFfJfbwvHY4E1WQ==
   dependencies:
     "@types/request" "^2.48.5"
     axios "^0.19.2"
