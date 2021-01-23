@@ -45,7 +45,7 @@ export default class App extends Component {
               }>
               <OverflowMenuProvider>
                 <Stack.Navigator initialRouteName={this.initialScreen}>
-                  <Stack.Screen name="Home" component={HomeScreen} options={{title: "Skema"}}/>
+                  <Stack.Screen name="Home" component={HomeScreen} options={{title: "Skema", headerShown: false}}/>
                   <Stack.Screen
                     name="Login"
                     component={LoginNavigator}

@@ -16,7 +16,7 @@ export class LektieScreen extends Component {
   render() {
     return (
       <Text>
-        Lektie
+        Lekti
       </Text>
     );
   }
@@ -27,7 +27,8 @@ export class LektieScreen extends Component {
 export class HomeScreen extends Component<{lectio: LectioStore}> {
   async componentDidMount() {
     // First we should check if the login credentials we are given are correct
-    
+    await this.props.lectio.login();
+
   }
 
   render() {

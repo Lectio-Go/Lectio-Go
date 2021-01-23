@@ -28,7 +28,13 @@ export default class LectioStore {
   @observable lessonList: Lesson[] = [];
   @action async GetBriefLessonList(year: number, week: number) {
     // We should check whether we are logged in before making an api request
+    console.log("Fetching lessons")
     this.lessonList = await (await GetBriefTimetable(this.user, this.requestHelper, year, week)).lessons;
+
+    console.log("Done Fetching lessons")
+    console.log(JSON.stringify(this.lessonList))
+
+
   }
 
   @observable opgaveList: Opgave[] = [];

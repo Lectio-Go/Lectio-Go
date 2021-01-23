@@ -31,7 +31,12 @@ export class SkemaScreen extends Component<SkemaScreenProps> {
       alert("ERROR: " + error)
     }
 
+    console.log("My student id:" + this.props.lectio.user.studentId)
+
+    console.log("Number of lessons: " + this.props.lectio.lessonList.length);
+
     for (let lesson of this.props.lectio.lessonList) {
+      console.log(JSON.stringify(lesson))
       this.items.push(<Text>
         {lesson.teachers![0].teacherInitials} : {lesson.teams![0].team} : {lesson.start.getHours()}
       </Text>)
@@ -50,7 +55,6 @@ export class SkemaScreen extends Component<SkemaScreenProps> {
           {
             pauseDuration = (this.props.lectio.lessonList![i + 1].start.getTime() - lesson.stop.getTime()) / (3600 * 1000);
           }
-          
           
           return (
             <>
