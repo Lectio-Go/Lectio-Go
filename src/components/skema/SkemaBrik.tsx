@@ -20,9 +20,9 @@ export default class SkemaBrik extends Component<SkemaBrikProps> {
   styles = StyleSheet.create({
     SkemaBrikContainer: {
       borderRadius: 7,
-      backgroundColor: this.props.theme!.colors.skemaRubrik,
       height: this.duration * 80,
       padding: 7,
+      backgroundColor: this.props.theme!.colors.skemaRubrik,
     },
     SkemaBrikTekst: {
       color: "white",
@@ -33,20 +33,35 @@ export default class SkemaBrik extends Component<SkemaBrikProps> {
 
   render() {
     return (
-      <View style={this.styles.SkemaBrikContainer}>
+      <View style={[this.styles.SkemaBrikContainer, this.props.lesson.state == "Cancelled" ? {backgroundColor: "red"} : {}]}>
         <TouchableOpacity style={{}}>
-          <Text style={this.styles.SkemaBrikTekst}>
-            {this.props.lesson.teams![0].team}
+          <Text style={[this.styles.SkemaBrikTekst, this.props.lesson.state == "Cancelled" ? {textDecorationLine: 'line-through'}: {}]}>
+            {this.props.lesson.teams!.map((team, i) => {
+              if (i + 1 < this.props.lesson.teams!.length)
+                return team.team + ", ";
+              else
+                return team.team;
+            })}
+            {/* {JSON.stringify(this.props.lesson)} */}
           </Text>
-          <View style={{flexDirection: "row"}}>
+          <View style={{ flexDirection: "row" }}>
             <Icon name="pin" size={20} style={{ color: "white" }} />
-            <Text style={this.styles.SkemaBrikTekst}>
-              {this.props.lesson.rooms![0]}
+            <Text style={[this.styles.SkemaBrikTekst, this.props.lesson.state == "Cancelled" ? {textDecorationLine: 'line-through'}: {}]}>
+              {this.props.lesson.rooms!.map((room, i) => {
+                if (i + 1 < this.props.lesson.rooms!.length)
+                  return room + ", ";
+                else
+                  return room;
+              })}
             </Text>
+          </View>
+          <View style={{ alignSelf: "flex-end" }}>
+            {this.props.lesson.homeworkBrief != undefined || this.props.lesson.noteBrief != undefined || this.props.lesson.otherBrief != undefined?
+              <Icon name="document-text-outline" size={25} style={{ color: "white" }} />
+              : <></>}
           </View>
 
 
-          <Icon name="document-text-outline" size={25} style={{ color: "white", alignSelf: "flex-end" }} />
         </TouchableOpacity>
       </View>
     )

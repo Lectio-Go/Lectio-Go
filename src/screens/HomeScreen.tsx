@@ -7,6 +7,8 @@ import { inject, observer } from 'mobx-react';
 import LectioStore from '../stores/LectioStore';
 import { SkemaScreen } from './SkemaScreen';
 import OpgaveScreen from './OpgaveScreen';
+import Icon from "react-native-vector-icons/Ionicons";
+import { BorderlessButton } from 'react-native-gesture-handler';
 
 
 const Tab = createBottomTabNavigator();
@@ -33,8 +35,8 @@ export class HomeScreen extends Component<{lectio: LectioStore}> {
 
   render() {
     return (
-      <Tab.Navigator>
-        <Tab.Screen name="Skema" component={SkemaScreen} />
+      <Tab.Navigator tabBarOptions={{showLabel: true, showIcon: true}}>
+        <Tab.Screen name="Skema" component={SkemaScreen} options={{tabBarIcon: () => <Icon size={20} name={"calendar-sharp"} color={"white"}/>}} />
         <Tab.Screen name="Lektie" component={LektieScreen} />
         <Tab.Screen name="Opgaver" component={OpgaveScreen} />
       </Tab.Navigator>
