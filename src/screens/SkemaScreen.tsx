@@ -20,13 +20,18 @@ interface SkemaScreenProps {
 @inject('lectio')
 @observer
 export class SkemaScreen extends Component<SkemaScreenProps> {
-  @observable items: JSX.Element[] = [];
   @observable weekSkema: Lesson.Lesson[][] = [[], [], [], [], [], [], []];
-
+  @observable pageIndex: number = 0;
 
   async componentDidMount() {
     //console.log(this.props.lectio.password)
     // Here we should fetch the timetable
+    this.pageIndex = new Date().getDay() - 1;
+
+    if (this.pageIndex < 0 || this.pageIndex > 4) {
+      this.pageIndex = 4;
+    }
+
     let now = new Date();
     let onejan = new Date(now.getFullYear(), 0, 1);
     let week = Math.ceil((((now.getTime() - onejan.getTime()) / 86400000) + onejan.getDay() + 1) / 7) - 1;
@@ -71,37 +76,22 @@ export class SkemaScreen extends Component<SkemaScreenProps> {
   render() {
     //console.log(this.weekSkema.length);
     return (
-
-      <ScrollView
-        style={{}}
-        //pagingEnabled={true}
-        showsHorizontalScrollIndicator={false}
-        horizontal={true}
-        decelerationRate={0}
-        snapToInterval={width}
-        snapToAlignment={"center"}
-        contentInset={{
-          top: 0,
-          left: 30,
-          bottom: 0,
-          right: 30,
-        }}>
+      <>
         {this.props.lectio.lessonList.length < 1 ? <></> :
           <>
-            <WeeklySkemaPaging lessons={{
-              mon: this.weekSkema[0], 
-              tue: this.weekSkema[1], 
+            <WeeklySkemaPaging pageIndex={this.pageIndex} lessons={{
+              mon: this.weekSkema[0],
+              tue: this.weekSkema[1],
               wed: this.weekSkema[2],
               thu: this.weekSkema[3],
               fri: this.weekSkema[4],
               sat: this.weekSkema[5],
               sun: this.weekSkema[6],
-              }} />
+            }} />
 
           </>
         }
-
-      </ScrollView>
+      </>
     )
   }
 

@@ -1,6 +1,6 @@
 import { observable } from "mobx";
 import { inject, observer } from "mobx-react";
-import React, { Component } from "react";
+import React, { Component, ReactElement, RefObject, useRef } from "react";
 import { Button, ScrollView, StyleSheet, View, Text, Dimensions } from "react-native";
 import { PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
 import DailySkema from "../skema/DailySkema"
@@ -22,15 +22,25 @@ interface WeeklySkemaPagingProps {
         sat: Lesson.Lesson[],
         sun: Lesson.Lesson[],
     }
+
+    pageIndex: number;
 }
 
 @inject('theme')
 @observer
 export default class WeeklySkemaPaging extends Component<WeeklySkemaPagingProps> {
+
+    myRef: RefObject<ScrollView> = React.createRef();
+
+    async componentDidMount() {
+
+        setTimeout(() => { this.myRef.current?.scrollTo({ x: width * this.props.pageIndex, y: 0, animated: false }); }, 1)
+    }
+
     render() {
         return (
-
             <ScrollView
+                ref={this.myRef}
                 style={{}}
                 //pagingEnabled={true}
                 showsHorizontalScrollIndicator={false}
@@ -44,20 +54,20 @@ export default class WeeklySkemaPaging extends Component<WeeklySkemaPagingProps>
                     bottom: 0,
                     right: 30,
                 }}>
-                {this.props.lessons.mon.length < 1 ? <View style={{width: width}} /> : 
-                <DailySkema lessons={this.props.lessons.mon} width={width} />}
-                {this.props.lessons.tue.length < 1 ? <View style={{width: width}} /> : 
-                <DailySkema lessons={this.props.lessons.tue} width={width} />}
-                {this.props.lessons.wed.length < 1 ? <View style={{width: width}} /> : 
-                <DailySkema lessons={this.props.lessons.wed} width={width} />}
-                {this.props.lessons.thu.length < 1 ? <View style={{width: width}} /> : 
-                <DailySkema lessons={this.props.lessons.thu} width={width} />}
-                {this.props.lessons.fri.length < 1 ? <View style={{width: width}} /> : 
-                <DailySkema lessons={this.props.lessons.fri} width={width} />}
-                {this.props.lessons.sat.length < 1 ? <View style={{width: width}} /> : 
-                <DailySkema lessons={this.props.lessons.sat} width={width} />}
-                {this.props.lessons.sun.length < 1 ? <View style={{width: width}} /> : 
-                <DailySkema lessons={this.props.lessons.sun} width={width} />}
+                {this.props.lessons.mon.length < 1 ? <View style={{ width: width }} /> :
+                    <DailySkema lessons={this.props.lessons.mon} width={width} />}
+                {this.props.lessons.tue.length < 1 ? <View style={{ width: width }} /> :
+                    <DailySkema lessons={this.props.lessons.tue} width={width} />}
+                {this.props.lessons.wed.length < 1 ? <View style={{ width: width }} /> :
+                    <DailySkema lessons={this.props.lessons.wed} width={width} />}
+                {this.props.lessons.thu.length < 1 ? <View style={{ width: width }} /> :
+                    <DailySkema lessons={this.props.lessons.thu} width={width} />}
+                {this.props.lessons.fri.length < 1 ? <View style={{ width: width }} /> :
+                    <DailySkema lessons={this.props.lessons.fri} width={width} />}
+                {this.props.lessons.sat.length < 1 ? <View style={{ width: width }} /> :
+                    <DailySkema lessons={this.props.lessons.sat} width={width} />}
+                {this.props.lessons.sun.length < 1 ? <View style={{ width: width }} /> :
+                    <DailySkema lessons={this.props.lessons.sun} width={width} />}
 
             </ScrollView>
         )

@@ -17,25 +17,12 @@ interface SkemaBrikProps {
 export default class SkemaBrik extends Component<SkemaBrikProps> {
   duration = (this.props.lesson.stop.getTime() - this.props.lesson.start.getTime()) / (3600 * 1000);
   colors = this.props.theme!.colors;
-  styles = StyleSheet.create({
-    SkemaBrikContainer: {
-      borderRadius: 7,
-      height: this.duration * 80,
-      padding: 7,
-      backgroundColor: this.props.theme!.colors.skemaRubrik,
-    },
-    SkemaBrikTekst: {
-      color: "white",
-
-    },
-    SkemaBrikIcon: {},
-  });
 
   render() {
     return (
-      <View style={[this.styles.SkemaBrikContainer, this.props.lesson.state == "Cancelled" ? {backgroundColor: "red"} : {}]}>
-        <TouchableOpacity style={{}}>
-          <Text style={[this.styles.SkemaBrikTekst, this.props.lesson.state == "Cancelled" ? {textDecorationLine: 'line-through'}: {}]}>
+      <View style={{}}>
+        <TouchableOpacity style={[this.props.theme?.styles.SkemaBrik, {height: this.duration * 60}, this.props.lesson.state == "Cancelled" ? this.props.theme?.styles.SkemaBrikAflyst : {}]}>
+          <Text style={[{color: "white"}, this.props.lesson.state == "Cancelled" ? {textDecorationLine: 'line-through'}: {}]}>
             {this.props.lesson.teams!.map((team, i) => {
               if (i + 1 < this.props.lesson.teams!.length)
                 return team.team + ", ";
@@ -46,7 +33,7 @@ export default class SkemaBrik extends Component<SkemaBrikProps> {
           </Text>
           <View style={{ flexDirection: "row" }}>
             <Icon name="pin" size={20} style={{ color: "white" }} />
-            <Text style={[this.styles.SkemaBrikTekst, this.props.lesson.state == "Cancelled" ? {textDecorationLine: 'line-through'}: {}]}>
+            <Text style={[{color: "white"}, this.props.lesson.state == "Cancelled" ? {textDecorationLine: 'line-through'}: {}]}>
               {this.props.lesson.rooms!.map((room, i) => {
                 if (i + 1 < this.props.lesson.rooms!.length)
                   return room + ", ";
@@ -54,12 +41,11 @@ export default class SkemaBrik extends Component<SkemaBrikProps> {
                   return room;
               })}
             </Text>
-          </View>
-          <View style={{ alignSelf: "flex-end" }}>
             {this.props.lesson.homeworkBrief != undefined || this.props.lesson.noteBrief != undefined || this.props.lesson.otherBrief != undefined?
-              <Icon name="document-text-outline" size={25} style={{ color: "white" }} />
+              <Icon name="document-text-outline" size={25} style={{ color: "white" , marginLeft: "auto"}} />
               : <></>}
           </View>
+
 
 
         </TouchableOpacity>

@@ -3,6 +3,7 @@ import {Appearance, ColorSchemeName} from 'react-native-appearance';
 import {StyleSheet} from 'react-native';
 import {DarkTheme, DefaultTheme, Theme} from '@react-navigation/native';
 import { NavigationScreenProp } from 'react-navigation';
+import SkemaBrik from '../components/skema/SkemaBrik';
 
 export interface Colors {
     primary: string;
@@ -11,7 +12,6 @@ export interface Colors {
     text: string;
     border: string;
     notification: string;
-    skemaRubrik: string;
 };
 
 export interface ThemeProps {
@@ -27,7 +27,7 @@ export default class ThemeStore {
     } else {
       this.theme = DefaultTheme;
     }
-    this.colors = {...this.theme.colors, skemaRubrik: "#0080FF"}
+    this.colors = {...this.theme.colors}
 
     // Listen to check if colorscheme has changed
     setInterval(()=>{
@@ -47,13 +47,21 @@ export default class ThemeStore {
   // Themes
   @observable theme: Theme = DefaultTheme;
   @observable colorscheme: ColorSchemeName;
-  @observable colors: Colors = DefaultTheme.colors;
+  @observable colors: Colors = {...DefaultTheme.colors};
   @computed get styles() {
     return StyleSheet.create({
       button: {
         color: this.colors.text,
         height: 40,
       },
+      SkemaBrik: {
+        borderRadius: 7,
+        padding: 7,
+        backgroundColor: "#0080FF",
+      },
+      SkemaBrikAflyst: {
+        backgroundColor: "#FF0000"
+      }
     });
   }
 }
