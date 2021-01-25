@@ -24,7 +24,6 @@ export default class SkemaTimeStamps extends Component<SkemaTimeStampsProps> {
     items: JSX.Element[] = [];
     lines: JSX.Element[] = [];
     async componentDidMount() {
-
     }
 
     render() {
@@ -34,7 +33,7 @@ export default class SkemaTimeStamps extends Component<SkemaTimeStampsProps> {
         }
         return (
             <>
-                <View style={{ backgroundColor: this.props.theme?.colors.background, height: "100%", width: 45, borderRightWidth: 0, borderRightColor: this.props.theme?.colors.border }}>
+                <View style={{ backgroundColor: this.props.theme?.colors.background, height: "100%", width: 45 }}>
                     {this.items}
                 </View>
                 {this.lines}

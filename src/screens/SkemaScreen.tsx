@@ -23,6 +23,7 @@ interface SkemaScreenProps {
 export class SkemaScreen extends Component<SkemaScreenProps> {
   @observable weekSkema: Lesson.Lesson[][] = [[], [], [], [], [], [], []];
   @observable pageIndex: number = 0;
+  @observable mondayDate: number = 0;
 
   async componentDidMount() {
     //console.log(this.props.lectio.password)
@@ -36,6 +37,7 @@ export class SkemaScreen extends Component<SkemaScreenProps> {
     let now = new Date();
     let onejan = new Date(now.getFullYear(), 0, 1);
     let week = Math.ceil((((now.getTime() - onejan.getTime()) / 86400000) + onejan.getDay() + 1) / 7) - 1;
+    this.mondayDate = onejan.getDate() + (week * 7) - onejan.getDay() + 1;
 
     try {
       await this.props.lectio.GetBriefLessonList(now.getFullYear(), week);
@@ -77,12 +79,12 @@ export class SkemaScreen extends Component<SkemaScreenProps> {
   render() {
     //console.log(this.weekSkema.length);
     return (
-      <View style={{flex: 1, flexDirection: "row"}}>
+      <>
 
 
-        {this.props.lectio.lessonList.length < 1 ? <></> :
+        {this.props.lectio.lessonList.length < 1 || this.mondayDate == undefined ? <></> :
           <>
-            <WeeklySkemaPaging pageIndex={this.pageIndex} lessons={{
+            <WeeklySkemaPaging mondayDate={this.mondayDate} pageIndex={this.pageIndex} lessons={{
               mon: this.weekSkema[0],
               tue: this.weekSkema[1],
               wed: this.weekSkema[2],
@@ -94,7 +96,7 @@ export class SkemaScreen extends Component<SkemaScreenProps> {
 
           </>
         }
-      </View>
+      </>
     )
   }
 

@@ -6,6 +6,7 @@ import ThemeStore from "../../stores/ThemeStore";
 import { Lesson } from "liblectio/lib/Skema/Timetable"
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/Ionicons";
+import { TabView, SceneMap } from 'react-native-tab-view';
 
 interface SkemaBrikProps {
   lesson: Lesson;
