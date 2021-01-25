@@ -31,20 +31,17 @@ export default class DailySkema extends Component<DailySkemaProps>{
     render() {
         //console.log(this.schoolStart);
         return (
-            <View style={{ flex: 1, flexDirection: "column", alignItems: "stretch", padding: 10, width: this.props.width }}>
-                <View>
-                    {this.props.lessons.map((lesson, i) => {
-                        let yPos: number = (lesson.start.getTime() - this.schoolStart.getTime()) / (3600 * 1000) * 60;
-                        //console.log(yPos);
-                        return (
-                            <View style={{ position: "absolute", top: yPos, width: this.props.width - 20 }} >
-                                <SkemaBrik lesson={lesson} />
-                            </View>
-                        )
-                    })
-                    }
-
-                </View>
+            <View style={{ flex: 1, flexDirection: "column", alignItems: "stretch", padding: 0, width: this.props.width - 45 }}>
+                {this.props.lessons.map((lesson, i) => {
+                    let yPos: number = (lesson.start.getTime() - this.schoolStart.getTime()) / (3600 * 1000) * 60;
+                    //console.log(yPos);
+                    return (
+                        <View style={{ position: "absolute", top: yPos, width: this.props.width - 45, paddingLeft: 10, paddingRight: 10, paddingTop: 10}} >
+                            <SkemaBrik lesson={lesson} />
+                        </View>
+                    )
+                })
+                }
             </View>
         )
     }

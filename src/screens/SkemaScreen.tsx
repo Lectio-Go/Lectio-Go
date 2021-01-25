@@ -8,6 +8,7 @@ import Lesson from "liblectio/lib/Skema/Timetable"
 import LectioStore from "../stores/LectioStore";
 import ThemeStore from "../stores/ThemeStore";
 import WeeklySkemaPaging from "../components/skema/WeeklySkemaPaging"
+import SkemaTimeStamps from "../components/skema/SkemaTimeStamps"
 
 const { width } = Dimensions.get('window');
 
@@ -28,8 +29,8 @@ export class SkemaScreen extends Component<SkemaScreenProps> {
     // Here we should fetch the timetable
     this.pageIndex = new Date().getDay() - 1;
 
-    if (this.pageIndex < 0 || this.pageIndex > 4) {
-      this.pageIndex = 4;
+    if (this.pageIndex < 0) {
+      this.pageIndex = 6;
     }
 
     let now = new Date();
@@ -76,7 +77,9 @@ export class SkemaScreen extends Component<SkemaScreenProps> {
   render() {
     //console.log(this.weekSkema.length);
     return (
-      <>
+      <View style={{flex: 1, flexDirection: "row"}}>
+
+
         {this.props.lectio.lessonList.length < 1 ? <></> :
           <>
             <WeeklySkemaPaging pageIndex={this.pageIndex} lessons={{
@@ -91,7 +94,7 @@ export class SkemaScreen extends Component<SkemaScreenProps> {
 
           </>
         }
-      </>
+      </View>
     )
   }
 

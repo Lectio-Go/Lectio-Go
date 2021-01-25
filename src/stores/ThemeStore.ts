@@ -57,7 +57,7 @@ export default class ThemeStore {
       SkemaBrik: {
         borderRadius: 7,
         padding: 7,
-        backgroundColor: "#0080FF",
+        backgroundColor: this.colors.primary,
       },
       SkemaBrikAflyst: {
         backgroundColor: "#FF0000"

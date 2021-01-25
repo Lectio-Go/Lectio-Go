@@ -20,36 +20,45 @@ export default class SkemaBrik extends Component<SkemaBrikProps> {
 
   render() {
     return (
-      <View style={{}}>
-        <TouchableOpacity style={[this.props.theme?.styles.SkemaBrik, {height: this.duration * 60}, this.props.lesson.state == "Cancelled" ? this.props.theme?.styles.SkemaBrikAflyst : {}]}>
-          <Text style={[{color: "white"}, this.props.lesson.state == "Cancelled" ? {textDecorationLine: 'line-through'}: {}]}>
-            {this.props.lesson.teams!.map((team, i) => {
-              if (i + 1 < this.props.lesson.teams!.length)
-                return team.team + ", ";
-              else
-                return team.team;
-            })}
-            {/* {JSON.stringify(this.props.lesson)} */}
-          </Text>
-          <View style={{ flexDirection: "row" }}>
-            <Icon name="pin" size={20} style={{ color: "white" }} />
-            <Text style={[{color: "white"}, this.props.lesson.state == "Cancelled" ? {textDecorationLine: 'line-through'}: {}]}>
-              {this.props.lesson.rooms!.map((room, i) => {
-                if (i + 1 < this.props.lesson.rooms!.length)
-                  return room + ", ";
+      <TouchableOpacity style={[this.props.theme?.styles.SkemaBrik, {
+        height: this.duration * 60, elevation: 2, // android
+        shadowColor: 'rgba(0,0,0, .4)', // IOS
+        shadowOffset: { height: 1, width: 1 }, // IOS
+        shadowOpacity: 1, // IOS
+        shadowRadius: 1, //IOS
+      },
+      this.props.lesson.state == "Cancelled" ? this.props.theme?.styles.SkemaBrikAflyst : {}]}>
+        <Text style={[{ color: "white" }, this.props.lesson.state == "Cancelled" ? { textDecorationLine: 'line-through' } : {}]}>
+          {this.props.lesson.teams == undefined ? <></> :
+            <>
+              {this.props.lesson.teams!.map((team, i) => {
+                if (i + 1 < this.props.lesson.teams!.length)
+                  return team.team + ", ";
                 else
-                  return room;
+                  return team.team;
               })}
-            </Text>
-            {this.props.lesson.homeworkBrief != undefined || this.props.lesson.noteBrief != undefined || this.props.lesson.otherBrief != undefined?
-              <Icon name="document-text-outline" size={25} style={{ color: "white" , marginLeft: "auto"}} />
-              : <></>}
-          </View>
-
-
-
-        </TouchableOpacity>
-      </View>
+            </>
+          }
+        </Text>
+        <View style={{ flexDirection: "row" }}>
+          <Icon name="pin" size={20} style={{ color: "white" }} />
+          <Text style={[{ color: "white" }, this.props.lesson.state == "Cancelled" ? { textDecorationLine: 'line-through' } : {}]}>
+            {this.props.lesson.rooms == undefined ? <></> :
+              <>
+                {this.props.lesson.rooms!.map((room, i) => {
+                  if (i + 1 < this.props.lesson.rooms!.length)
+                    return room + ", ";
+                  else
+                    return room;
+                })}
+              </>
+            }
+          </Text>
+          {this.props.lesson.homeworkBrief != undefined || this.props.lesson.noteBrief != undefined || this.props.lesson.otherBrief != undefined ?
+            <Icon name="document-text-outline" size={25} style={{ color: "white", marginLeft: "auto" }} />
+            : <></>}
+        </View>
+      </TouchableOpacity>
     )
   }
 }
