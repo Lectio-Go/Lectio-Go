@@ -30,14 +30,14 @@ export default class SkemaTimeStamps extends Component<SkemaTimeStampsProps> {
     render() {
         for (let i = this.props.start; i <= this.props.end; i++) {
             this.items.push(<View style={{ position: "absolute", top: 3 + (i - this.props.start) * 60, left: 4 }} ><Text style={{ color: this.props.theme?.colors.text }} >{(i < 10 ? "0" + String(i) : String(i)) + ":00"}</Text></View>)
-            this.lines.push(<View style={{ position: "absolute", top: 13 + (i - this.props.start) * 60, width: width, borderTopColor: this.props.theme?.colors.border, borderTopWidth: 1 }} />)
+            this.lines.push(<View style={{ position: "absolute", top: 13 + (i - this.props.start) * 60, left: 45, width: width - 45, borderTopColor: this.props.theme?.colors.border, borderTopWidth: 1 }} />)
         }
         return (
             <>
-                {this.lines}
                 <View style={{ backgroundColor: this.props.theme?.colors.background, height: "100%", width: 45, borderRightWidth: 0, borderRightColor: this.props.theme?.colors.border }}>
                     {this.items}
                 </View>
+                {this.lines}
             </>
         )
     }

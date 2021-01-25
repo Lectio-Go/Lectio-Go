@@ -12,6 +12,7 @@
     "liblectio": "0.0.21",
     "mobx": "^5.0.1",
     "mobx-react": "^5.0.0",
+    "native-base": "^2.15.2",
     "react": "16.13.1",
     "react-native": "0.63.2",
     "react-native-appearance": "^0.3.4",
