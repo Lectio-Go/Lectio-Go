@@ -22,31 +22,6 @@ import { FlatList } from "react-native-gesture-handler";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Cell, Section, Separator, TableView } from "react-native-tableview-simple";
 
-const keyExtractor = (item: number, _index: number) => `${item}`
-
-// @inject('lectio')
-// @inject('theme')
-// @observer
-// class Item extends Component<{ onPress: (school: number) => void, item: number, theme?: ThemeStore, lectio?: LectioStore }, {}> {
-//   render() {
-//     return (
-//       // Theme the theme provider and the underlay color. Next thing to implement is a better mobx based theming that is independent from lectio store
-//       <ThemeProvider useDark={this.props.theme!.colorscheme === 'dark' ? true : false}>
-//         <TouchableHighlight onPress={() => this.props.onPress(this.props.item)} underlayColor="#FFFFFF" style={{ paddingBottom: 0.0 }}>
-//           <ListItem key={this.props.item} topDivider>
-//             <ListItem.Content>
-//               <ListItem.Title>{this.props.lectio!.opgaveList.filter(school => { return school.id === String(this.props.item) })[0].opgavetitel}</ListItem.Title>
-//             </ListItem.Content>
-//             <ListItem.Chevron type='ionicon' name='chevron-forward-outline' />
-
-//           </ListItem>
-//         </TouchableHighlight>
-//       </ThemeProvider>
-//     );
-//   }
-// }
-
-
 const Tab = createMaterialTopTabNavigator();
 
 function OpgaveTabs() {
@@ -82,7 +57,6 @@ class OpgaveList extends Component<OpgaveListProps> {
   @observable taskWeeks: { week: number, opgaver: Opgave[] }[] = [];
 
   reloadOpgaver = () => {
-
     if(this.props.lectio != undefined && this.props.lectio.opgaveList != undefined) {
       let tempTaskWeeks: { week: number, opgaver: Opgave[] }[] = [];
 
@@ -132,12 +106,12 @@ class OpgaveList extends Component<OpgaveListProps> {
       <ScrollView bounces={true} refreshControl={
         <RefreshControl refreshing={this.refreshing} onRefresh={this.onRefresh} />
       }>
-        <TableView key={"Tableview"} style={{ flex: 1, paddingHorizontal: 1 }}>
-          <View key={"beginMargin"} style={{ marginVertical: -3 }}></View>
+        <TableView key={"tableview"} style={{ flex: 1, paddingHorizontal: 1 }}>
+          <View key={"top margin"} style={{ marginVertical: -3 }}></View>
           {this.taskWeeks.map((taskWeek, index: number) => {
             return (
-            <>
-              <Section key={taskWeek.week} header={"Uge " + taskWeek.week}>
+            <View key={taskWeek.week + " wrapper"}>
+              <Section key={taskWeek.week + " section"} header={"Uge " + taskWeek.week}>
                 {taskWeek.opgaver.map((opgave) => {
                   return (
                     <Cell key={opgave.id} title={opgave.opgavetitel} onPress={()=> {
@@ -147,8 +121,8 @@ class OpgaveList extends Component<OpgaveListProps> {
                 })}
               </Section>
               {/* Remove spacing in section */}
-              {index != this.taskWeeks.length-1? <View key={taskWeek.week + " bottom margin"} style={{ marginVertical: -10 }}></View> : <></>}
-            </>
+              {index != this.taskWeeks.length-1? <View key={taskWeek.week + " bottom margin"} style={{ marginVertical: -10 }}></View> : <View key={Math.random()*10000000}></View>}
+            </View>
             )
           })}
         </TableView>
