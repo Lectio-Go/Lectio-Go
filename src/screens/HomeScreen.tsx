@@ -36,7 +36,7 @@ export class HomeScreen extends Component<{lectio: LectioStore}> {
   render() {
     return (
       <Tab.Navigator tabBarOptions={{showLabel: true, showIcon: true}}>
-        <Tab.Screen name="Skema" component={SkemaScreen} options={{tabBarIcon: () => <Icon size={20} name={"calendar-sharp"} color={"white"}/>}} />
+        <Tab.Screen name="Skema" component={LektieScreen} options={{tabBarIcon: () => <Icon size={20} name={"calendar-sharp"} color={"white"}/>}} />
         <Tab.Screen name="Lektie" component={LektieScreen} />
         <Tab.Screen name="Opgaver" component={OpgaveScreen} />
       </Tab.Navigator>

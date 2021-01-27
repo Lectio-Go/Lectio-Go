@@ -38,7 +38,7 @@ export default class LectioStore {
   }
 
   @observable opgaveList: Opgave[] = [];
-  @action async GetOpgaver() {
+  async GetOpgaver() {
     this.opgaveList = await hentOpgaver(this.user, this.requestHelper);
   }
 
