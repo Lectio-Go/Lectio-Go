@@ -9,6 +9,10 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@react-native-community/viewpager": "^4.2.2",
+    "@react-navigation/material-top-tabs": "^5.3.13",
+    "@types/uuid": "^8.3.0",
+    "datejs": "^1.0.0-rc3",
     "liblectio": "0.0.22",
     "mobx": "^5.0.1",
     "mobx-react": "^5.0.0",
@@ -26,10 +30,12 @@
     "react-native-screens": "^2.11.0",
     "react-native-search-bar": "^3.5.1",
     "react-native-tab-view": "^2.15.2",
+    "react-native-tab-view-viewpager-adapter": "^1.1.0",
     "react-native-vector-icons": "^7.1.0",
     "react-navigation": "^4.4.2",
     "react-navigation-header-buttons": "^5.0.2",
-    "react-router-redux": "^5.0.0-alpha.9"
+    "react-router-redux": "^5.0.0-alpha.9",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",

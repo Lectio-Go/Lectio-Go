@@ -36,7 +36,7 @@ export default class DailySkema extends Component<DailySkemaProps>{
                     let yPos: number = (lesson.start.getTime() - this.schoolStart.getTime()) / (3600 * 1000) * 60;
                     //console.log(yPos);
                     return (
-                        <View style={{ position: "absolute", top: yPos, width: this.props.width - 45, paddingLeft: 10, paddingRight: 10, paddingTop: 10}} >
+                        <View key={lesson.lessonId} style={{ position: "absolute", top: yPos, width: this.props.width - 45, paddingLeft: 10, paddingRight: 10, paddingTop: 10}} >
                             <SkemaBrik lesson={lesson} />
                         </View>
                     )
