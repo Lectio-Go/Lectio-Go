@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, ScrollView, StyleSheet, Text, View, TouchableHighlight, FlatListProps, Platform, RefreshControl } from "react-native";
+import { Button, ScrollView, StyleSheet, Text, View, TouchableHighlight, FlatListProps, Platform, RefreshControl, OpaqueColorValue } from "react-native";
 
 import { NavigationParams, NavigationScreenProp } from 'react-navigation';
 import { enableScreens } from 'react-native-screens';
@@ -29,7 +29,7 @@ function OpgaveTabs() {
   return (
     <>
       <View style={{ marginVertical: -5 }}></View>
-      <Tab.Navigator initialRouteName="Venter" tabBarOptions={{upperCaseLabel: false ,labelStyle: {fontSize: 14, fontWeight: "normal", textTransform: "none"}}}>
+      <Tab.Navigator initialRouteName="Venter" tabBarOptions={{upperCaseLabel: false ,labelStyle: {fontSize: 15, fontWeight: "normal", textTransform: "none"}}}>
         <Tab.Screen name="Alle" component={OpgaveList} options={{tabBarOptions: {upperCaseLabel: false}}}/>
         <Tab.Screen name="Afleveret" component={OpgaveList}/>
         <Tab.Screen name="Venter" component={OpgaveList} />
@@ -50,45 +50,51 @@ interface OpgaveListProps {
   navigation: NavigationScreenProp<any, any>;
 }
 
+// Under 1 time:              57 minutter og 47 sekunder
+// Mellem 1 time og 24 timer: 14 timer og 7 minutter
+// Mellem 1 dag og 14 dage:   6 dage og 7 timer
+// Over 14 dage:              7. marts 2021 kl. 23.30
+
 @inject('theme')
 @inject('lectio')
 @observer
 class OpgaveList extends Component<OpgaveListProps> {
   @observable refreshing = false;
-  @observable taskWeeks: { week: number, opgaver: Opgave[] }[] = [];
+  @observable taskWeeks: { week: number, elevtimer: number,opgaver: Opgave[] }[] = [];
 
   constructor(props: OpgaveListProps) {
     super(props);
-    this.props.navigation.setOptions(() => { title: 'Updated!' })
+    // this.props.navigation.setOptions(() => { title: 'Updated!' })
   }
 
   reloadOpgaver = () => {
     if (this.props.lectio != undefined && this.props.lectio.opgaveList != undefined) {
-      let tempTaskWeeks: { week: number, opgaver: Opgave[] }[] = [];
+      let tempTaskWeeks: { week: number, elevtimer: number, opgaver: Opgave[] }[] = [];
 
       for (let opgave of this.props.lectio.opgaveList) {
-        if (opgave.frist == undefined)
-          return;
+        if (opgave.frist == undefined || new Date(opgave.frist!).getTime() < Date.now())
+          continue;
         // Get week for opgave
         let opgaveDate: Date = new Date(opgave.frist!)
         let onejan = new Date(opgaveDate.getFullYear(), 0, 1);
         let week = Math.ceil((((opgaveDate.getTime() - onejan.getTime()) / 86400000) + onejan.getDay() + 1) / 7);
-
+        
         // Now we check whether this taskweek exists, and add it if it doesnt
         let taskWeekIndex = -1;
 
         tempTaskWeeks.forEach((taskweek, index) => {
-          if (taskweek.week == week)
+          if (taskweek.week == week) 
             taskWeekIndex = index;
         })
 
         if (taskWeekIndex == -1) {
-          tempTaskWeeks.push({ week: week, opgaver: [] });
+          tempTaskWeeks.push({ week: week, elevtimer: 0, opgaver: [] });
           taskWeekIndex = tempTaskWeeks.length - 1;
         }
 
         // Now we add the opgave to the taskweek
         tempTaskWeeks[taskWeekIndex].opgaver.push(opgave);
+        tempTaskWeeks[taskWeekIndex].elevtimer += Number(opgave.elevtid?.replace(',', '.'));
       }
 
       this.taskWeeks = tempTaskWeeks;
@@ -112,17 +118,23 @@ class OpgaveList extends Component<OpgaveListProps> {
       <ScrollView style={{backgroundColor: this.props.theme.colors.background}} bounces={true} refreshControl={
         <RefreshControl refreshing={this.refreshing} onRefresh={this.onRefresh} />
       }>
-        <TableView key={"tableview"} style={{ flex: 1, paddingHorizontal: 1 }} customAppearances={{background: "red"}}>
+        <TableView key={"tableview"} style={{ flex: 1, paddingHorizontal: 1 }}>
           <View key={"top margin"} style={{ marginVertical: -3 }}></View>
           {this.taskWeeks.map((taskWeek, index: number) => {
             return (
               <View key={taskWeek.week + " wrapper"} style={{marginHorizontal: 5}}>
-                <Section key={taskWeek.week + " section"} header={"Uge " + taskWeek.week} roundedCorners={true} hideSurroundingSeparators={true}>
+                <Section key={taskWeek.week + " section"}
+                headerComponent={(
+                <View style={{flex: 1, flexDirection: "row", justifyContent: "space-between", padding: 2}}> 
+                  <Text style={{color: "#aaaaaa", fontWeight: "bold"}}>{"Uge " + taskWeek.week} </Text> 
+                  <Text style={{color: "#aaaaaa"}}>{taskWeek.elevtimer} elevtime{taskWeek.elevtimer == 1? "": "r"}</Text> 
+                </View>)}
+                 roundedCorners={true} hideSurroundingSeparators={true}>
                   {taskWeek.opgaver.map((opgave) => {
                     return (
-                      <Cell key={opgave.id} title={opgave.opgavetitel} onPress={() => {
+                      <Cell key={opgave.id} cellStyle="Subtitle" title={opgave.opgavetitel} detail={opgave.hold+", 1 dag"} onPress={() => {
                         this.props.navigation.navigate("Opgavedetalje", { name: opgave.opgavetitel })
-                      }} accessory="DisclosureIndicator" />
+                      }} accessory="DisclosureIndicator" accessoryColorDisclosureIndicator="red"/>
                     )
                   })}
                 </Section>
@@ -202,8 +214,8 @@ export class OpgaveScreen extends Component<OpgaveScreenProps> {
   render() {
     return (
       <Stack.Navigator initialRouteName="Opgaveliste">
-        <Stack.Screen name="Opgaveliste" component={OpgaveTabs} options={{ title: "Opgaver", headerTopInsetEnabled: false, headerTranslucent: true }} />
-        <Stack.Screen name="Opgavedetalje" component={OpgaveDetail} options={{ headerTopInsetEnabled: false , headerTranslucent: true}} />
+        <Stack.Screen name="Opgaveliste" component={OpgaveTabs} options={{ title: "Opgaver", headerTopInsetEnabled: false}} />
+        <Stack.Screen name="Opgavedetalje" component={OpgaveDetail} options={{ headerTopInsetEnabled: false}} />
       </Stack.Navigator>
     )
   }

@@ -11,7 +11,8 @@ export interface Colors {
     text: string;
     border: string;
     notification: string;
-    skemaRubrik: string;
+    skemaRubrik?: string;
+    greyText?: string;
 };
 
 export interface ThemeProps {
@@ -24,8 +25,10 @@ export default class ThemeStore {
     this.colorscheme = Appearance.getColorScheme();
     if (this.colorscheme === 'dark') {
       this.theme = DarkTheme;
+      this.colors = {...this.theme.colors, greyText: "#aaaaaa"}
     } else {
       this.theme = DefaultTheme;
+      this.colors = {...this.theme.colors, greyText: "#909090"}
     }
     this.colors = {...this.theme.colors, skemaRubrik: "#0080FF"}
   }
