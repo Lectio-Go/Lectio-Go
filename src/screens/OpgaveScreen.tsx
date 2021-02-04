@@ -5,11 +5,8 @@ import { NavigationParams, NavigationScreenProp } from 'react-navigation';
 import { enableScreens } from 'react-native-screens';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 
-
-
-import { CollapsibleHeaderFlatList } from 'react-native-collapsible-header-views';
-// import { ListItem, ThemeProvider } from 'react-native-elements'
-
+import { format, differenceInCalendarWeeks } from 'date-fns';
+import da from 'date-fns/locale/da'
 
 import { computed, observable, observe } from 'mobx';
 import { inject, observer } from 'mobx-react';
@@ -50,10 +47,44 @@ interface OpgaveListProps {
   navigation: NavigationScreenProp<any, any>;
 }
 
-// Under 1 time:              57 minutter og 47 sekunder
-// Mellem 1 time og 24 timer: 14 timer og 7 minutter
-// Mellem 1 dag og 14 dage:   6 dage og 7 timer
-// Over 14 dage:              7. marts 2021 kl. 23.30
+
+function getFormattedDuration(start: Date, end: Date): string {
+  // Under 1 time:              57 minutter og 47 sekunder
+  // Mellem 1 time og 24 timer: 14 timer og 7 minutter
+  // Mellem 1 dag og 14 dage:   6 dage og 7 timer
+  // Over 14 dage:              7. marts 2021 kl. 23.30
+
+  let diff = end.getTime() - start.getTime();
+  let days = Math.floor(diff / 24 / 60 / 60 / 1000);
+  let hours = Math.floor((diff - days * 24 * 60 * 60 * 1000) / 60 / 60 / 1000);
+  let minutes = Math.floor((diff - days * 24 * 60 * 60 * 1000 - hours * 60 * 60 * 1000) / 60 / 1000);
+  let seconds = Math.floor((diff - days * 24 * 60 * 60 * 1000 - hours * 60 * 60 * 1000 - minutes * 60 * 1000) / 1000);
+
+  if (days >= 14 || diff < 0) {
+    // 7. marts 2021 kl. 23.30
+    return format(new Date(end), "d'.' MMMM Y 'kl.' HH'.'mm", { locale: da })
+  } else {
+    let datearray = [];
+
+    if (days >= 1) {
+      minutes = 0;
+      seconds = 0;
+    } else if (hours >= 1) {
+      seconds = 0;
+    }
+
+    if (days != 0)
+      datearray.push(days + " " + (days == 1 ? "dag" : "dage"));
+    if (hours != 0)
+      datearray.push(hours + " " + (hours == 1 ? "time" : "timer"));
+    if (minutes != 0)
+      datearray.push(minutes + " " + (minutes == 1 ? "minut" : "minutter"));
+    if (seconds != 0)
+      datearray.push(seconds + " " + (seconds == 1 ? "sekund" : "sekunder"));
+
+    return datearray.join(" og ");
+  }
+}
 
 @inject('theme')
 @inject('lectio')
@@ -74,11 +105,14 @@ class OpgaveList extends Component<OpgaveListProps> {
       for (let opgave of this.props.lectio.opgaveList) {
         if (opgave.frist == undefined || new Date(opgave.frist!).getTime() < Date.now())
           continue;
+          console.log(opgave.frist)
         // Get week for opgave
         let opgaveDate: Date = new Date(opgave.frist!)
         let onejan = new Date(opgaveDate.getFullYear(), 0, 1);
-        let week = Math.ceil((((opgaveDate.getTime() - onejan.getTime()) / 86400000) + onejan.getDay() + 1) / 7);
-        
+        console.log(opgaveDate)
+
+        let week = differenceInCalendarWeeks(opgaveDate, onejan);
+
         // Now we check whether this taskweek exists, and add it if it doesnt
         let taskWeekIndex = -1;
 
@@ -132,7 +166,7 @@ class OpgaveList extends Component<OpgaveListProps> {
                  roundedCorners={true} hideSurroundingSeparators={true}>
                   {taskWeek.opgaver.map((opgave) => {
                     return (
-                      <Cell key={opgave.id} cellStyle="Subtitle" title={opgave.opgavetitel} detail={opgave.hold+", 1 dag"} onPress={() => {
+                      <Cell key={opgave.id} cellStyle="Subtitle" title={opgave.opgavetitel} detail={opgave.hold+", " + getFormattedDuration(new Date(),  new Date(opgave.frist!))} onPress={() => {
                         this.props.navigation.navigate("Opgavedetalje", { name: opgave.opgavetitel })
                       }} accessory="DisclosureIndicator" accessoryColorDisclosureIndicator="red"/>
                     )
