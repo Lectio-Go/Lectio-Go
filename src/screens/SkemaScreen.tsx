@@ -10,10 +10,10 @@ import ThemeStore from "../stores/ThemeStore";
 import WeeklySkemaPaging from "../components/skema/WeeklySkemaPaging"
 import SkemaTimeStamps from "../components/skema/SkemaTimeStamps"
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { addWeeks, getISOWeek, startOfWeek } from 'date-fns'
+import { addWeeks, getISOWeek, startOfWeek, addDays } from 'date-fns'
 import ViewPagerAdapter from 'react-native-tab-view-viewpager-adapter';
 import ViewPager from "@react-native-community/viewpager";
-import CalendarStrip from 'react-native-calendar-strip'
+import moment from 'moment'
 
 const { width } = Dimensions.get('window');
 
@@ -47,6 +47,7 @@ export class SkemaScreen extends Component<SkemaScreenProps> {
 
 
 
+
     let now = new Date();
     let onejan = new Date(now.getFullYear(), 0, 1);
     this.weeks = [addWeeks(now, -1), now, addWeeks(now, 1)];
@@ -66,16 +67,18 @@ export class SkemaScreen extends Component<SkemaScreenProps> {
 
         {this.year == 0 || this.weeks.length < 2 ? <></> :
 
-           <weekTab.Navigator
-             pager={props => <ViewPagerAdapter {...props} onIndexChange={(index) => this.updateWeekList(index)} />}
-             initialLayout={{ width: width }}
-             initialRouteName={String(getISOWeek(new Date()))}
-             tabBarOptions={{style: {height: 0}}}
-             >
-             {this.weeks.map((week, i) => {
-               return <weekTab.Screen key={String(getISOWeek(week))} name={String(getISOWeek(week))} children={() => <WeeklySkemaPaging pageIndex={this.pageIndex} week={getISOWeek(week)} year={week.getFullYear()} />} />
-             })}
-           </weekTab.Navigator>
+          
+
+            <weekTab.Navigator
+              pager={props => <ViewPagerAdapter {...props} onIndexChange={(index) => this.updateWeekList(index)} />}
+              initialLayout={{ width: width }}
+              initialRouteName={String(getISOWeek(new Date()))}
+              tabBarOptions={{style: {height: 0}}}
+              >
+              {this.weeks.map((week, i) => {
+                return <weekTab.Screen key={String(getISOWeek(week))} name={String(getISOWeek(week))} children={() => <WeeklySkemaPaging pageIndex={this.pageIndex} week={getISOWeek(week)} year={week.getFullYear()} />} />
+              })}
+            </weekTab.Navigator>
 
 
         }
