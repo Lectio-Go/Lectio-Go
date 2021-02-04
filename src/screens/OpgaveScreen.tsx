@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, ScrollView, StyleSheet, Text, View, TouchableHighlight, FlatListProps, Platform, RefreshControl } from "react-native";
 
-import { NavigationScreenProp } from 'react-navigation';
+import { NavigationParams, NavigationScreenProp } from 'react-navigation';
 import { enableScreens } from 'react-native-screens';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 
@@ -21,6 +21,7 @@ import { Opgave } from "liblectio/lib/Opaver/opgaver";
 import { FlatList } from "react-native-gesture-handler";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Cell, Section, Separator, TableView } from "react-native-tableview-simple";
+import { Icon } from "native-base";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -62,30 +63,30 @@ class OpgaveList extends Component<OpgaveListProps> {
   }
 
   reloadOpgaver = () => {
-    if(this.props.lectio != undefined && this.props.lectio.opgaveList != undefined) {
+    if (this.props.lectio != undefined && this.props.lectio.opgaveList != undefined) {
       let tempTaskWeeks: { week: number, opgaver: Opgave[] }[] = [];
 
-      for(let opgave of this.props.lectio.opgaveList) {
-        if(opgave.frist == undefined)
+      for (let opgave of this.props.lectio.opgaveList) {
+        if (opgave.frist == undefined)
           return;
         // Get week for opgave
         let opgaveDate: Date = new Date(opgave.frist!)
         let onejan = new Date(opgaveDate.getFullYear(), 0, 1);
-        let week = Math.ceil( (((opgaveDate.getTime() - onejan.getTime()) / 86400000) + onejan.getDay() + 1) / 7 );
-  
+        let week = Math.ceil((((opgaveDate.getTime() - onejan.getTime()) / 86400000) + onejan.getDay() + 1) / 7);
+
         // Now we check whether this taskweek exists, and add it if it doesnt
         let taskWeekIndex = -1;
-  
+
         tempTaskWeeks.forEach((taskweek, index) => {
-          if(taskweek.week == week)
-          taskWeekIndex = index;
+          if (taskweek.week == week)
+            taskWeekIndex = index;
         })
-  
-        if(taskWeekIndex == -1) {
-          tempTaskWeeks.push({week: week, opgaver: []});
+
+        if (taskWeekIndex == -1) {
+          tempTaskWeeks.push({ week: week, opgaver: [] });
           taskWeekIndex = tempTaskWeeks.length - 1;
         }
-  
+
         // Now we add the opgave to the taskweek
         tempTaskWeeks[taskWeekIndex].opgaver.push(opgave);
       }
@@ -95,7 +96,7 @@ class OpgaveList extends Component<OpgaveListProps> {
   }
 
   async componentDidMount() {
-    observe(this.props.lectio, ()=> {
+    observe(this.props.lectio, () => {
       this.reloadOpgaver()
     })
   }
@@ -108,26 +109,26 @@ class OpgaveList extends Component<OpgaveListProps> {
 
   render() {
     return (
-      <ScrollView bounces={true} refreshControl={
+      <ScrollView style={{backgroundColor: this.props.theme.colors.background}} bounces={true} refreshControl={
         <RefreshControl refreshing={this.refreshing} onRefresh={this.onRefresh} />
       }>
-        <TableView key={"tableview"} style={{ flex: 1, paddingHorizontal: 1 }}>
+        <TableView key={"tableview"} style={{ flex: 1, paddingHorizontal: 1 }} customAppearances={{background: "red"}}>
           <View key={"top margin"} style={{ marginVertical: -3 }}></View>
           {this.taskWeeks.map((taskWeek, index: number) => {
             return (
-            <View key={taskWeek.week + " wrapper"}>
-              <Section key={taskWeek.week + " section"} header={"Uge " + taskWeek.week}>
-                {taskWeek.opgaver.map((opgave) => {
-                  return (
-                    <Cell key={opgave.id} title={opgave.opgavetitel} onPress={()=> {
-                      this.props.navigation.navigate("Opgavedetalje")
-                    }} accessory="DisclosureIndicator" />
-                  )
-                })}
-              </Section>
-              {/* Remove spacing in section */}
-              {index != this.taskWeeks.length-1? <View key={taskWeek.week + " bottom margin"} style={{ marginVertical: -10 }}></View> : <View key={Math.random()*10000000}></View>}
-            </View>
+              <View key={taskWeek.week + " wrapper"} style={{marginHorizontal: 5}}>
+                <Section key={taskWeek.week + " section"} header={"Uge " + taskWeek.week} roundedCorners={true} hideSurroundingSeparators={true}>
+                  {taskWeek.opgaver.map((opgave) => {
+                    return (
+                      <Cell key={opgave.id} title={opgave.opgavetitel} onPress={() => {
+                        this.props.navigation.navigate("Opgavedetalje", { name: opgave.opgavetitel })
+                      }} accessory="DisclosureIndicator" />
+                    )
+                  })}
+                </Section>
+                {/* Remove spacing in section */}
+                {index != this.taskWeeks.length - 1 ? <View key={taskWeek.week + " bottom margin"} style={{ marginVertical: -10 }}></View> : <View key={Math.random() * 10000000}></View>}
+              </View>
             )
           })}
         </TableView>
@@ -141,18 +142,43 @@ interface OpgaveDetailProps {
   lectio: LectioStore;
   theme: ThemeStore;
   navigation: NavigationScreenProp<any, any>;
+  route: NavigationParams;
 }
+
+@inject('theme')
 class OpgaveDetail extends Component<OpgaveDetailProps> {
   render() {
     return (
-      <View>
-        <Button title="List" onPress={() => {
-          this.props.navigation.goBack();
-        }}></Button>
-        <Text>
-          Detalje
+      <TableView>
+        <Section header="INFO OM OPGAVEN">
+          <Cell title="Hold" cellAccessoryView={<Text style={{color: this.props.theme.colors.skemaRubrik}}>{this.props.route.params.name}</Text>} ></Cell>
+          <Cell title="Ansvarlig" ></Cell>
+          <Cell title="Frist" ></Cell>
+          <Cell title="Elevtid" ></Cell>
+          <Cell title="Status" ></Cell>
+          <Cell title="Opgavenote" ></Cell>
+          <Cell title="Afventer" ></Cell>
+          <Cell title="Karakterskala" ></Cell>
+        </Section>
+        <View style={{ marginVertical: -6 }}></View>
+        <Section header="OPGAVEBESKRIVELSER">
+          <Cell title="Yeet" ></Cell>
+        </Section>
+        <View style={{ marginVertical: -6 }}></View>
+        <Section header="OPGAVEINDLÆG">
+          <Cell title="Yeet" ></Cell>
+        </Section>
+
+{/*         
+        <Text style={{ color: this.props.theme.colors.text }}>
+          {this.props.route.params.name}
         </Text>
-      </View>
+        <View style={{ marginVertical: 130 }}></View>
+        <Button title="Aflever" onPress={() => {
+          this.props.navigation.goBack();
+        }}></Button> */}
+
+      </TableView>
     )
   }
 }
@@ -171,14 +197,13 @@ interface OpgaveScreenProps {
 export class OpgaveScreen extends Component<OpgaveScreenProps> {
   async componentDidMount() {
     await this.props.lectio.GetOpgaver();
-    console.log(this.props.lectio.opgaveList)
   }
 
   render() {
     return (
       <Stack.Navigator initialRouteName="Opgaveliste">
-        <Stack.Screen name="Opgaveliste" component={OpgaveTabs} options={{ title: "Opgaver", headerTopInsetEnabled: false }} />
-        <Stack.Screen name="Opgavedetalje" component={OpgaveDetail} options={{ headerTopInsetEnabled: false }} />
+        <Stack.Screen name="Opgaveliste" component={OpgaveTabs} options={{ title: "Opgaver", headerTopInsetEnabled: false, headerTranslucent: true }} />
+        <Stack.Screen name="Opgavedetalje" component={OpgaveDetail} options={{ headerTopInsetEnabled: false , headerTranslucent: true}} />
       </Stack.Navigator>
     )
   }
