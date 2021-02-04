@@ -83,12 +83,4 @@ export default class LectioStore {
       });
     });
   }
-
-  @action async indlæsLectioSkema() {
-    try {
-      throw new Error('indlæsLectioSkema is not Implemented');
-    } catch (e) {
-      console.log(e);
-    }
-  }
 }

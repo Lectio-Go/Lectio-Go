@@ -28,20 +28,6 @@ export default class ThemeStore {
       this.theme = DefaultTheme;
     }
     this.colors = {...this.theme.colors, skemaRubrik: "#0080FF"}
-
-    // Listen to check if colorscheme has changed
-    setInterval(()=>{
-        this.UpdateColorScheme();
-    }, 100)
-  }
-
-  @action UpdateColorScheme() {
-    const colorscheme = Appearance.getColorScheme();
-    if (this.colorscheme !== colorscheme) {
-      this.colorscheme = colorscheme;
-      this.theme = colorscheme === 'dark'? DarkTheme : DefaultTheme;
-      this.colors = {...this.theme.colors}
-    }
   }
 
   // Themes

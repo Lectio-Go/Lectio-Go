@@ -28,9 +28,9 @@ function OpgaveTabs() {
   return (
     <>
       <View style={{ marginVertical: -5 }}></View>
-      <Tab.Navigator initialRouteName="Venter">
-        <Tab.Screen name="Alle" component={OpgaveList} />
-        <Tab.Screen name="Afleveret" component={OpgaveList} />
+      <Tab.Navigator initialRouteName="Venter" tabBarOptions={{upperCaseLabel: false ,labelStyle: {fontSize: 14, fontWeight: "normal", textTransform: "none"}}}>
+        <Tab.Screen name="Alle" component={OpgaveList} options={{tabBarOptions: {upperCaseLabel: false}}}/>
+        <Tab.Screen name="Afleveret" component={OpgaveList}/>
         <Tab.Screen name="Venter" component={OpgaveList} />
         <Tab.Screen name="Mangler" component={OpgaveList} />
       </Tab.Navigator>
@@ -55,6 +55,11 @@ interface OpgaveListProps {
 class OpgaveList extends Component<OpgaveListProps> {
   @observable refreshing = false;
   @observable taskWeeks: { week: number, opgaver: Opgave[] }[] = [];
+
+  constructor(props: OpgaveListProps) {
+    super(props);
+    this.props.navigation.setOptions(() => { title: 'Updated!' })
+  }
 
   reloadOpgaver = () => {
     if(this.props.lectio != undefined && this.props.lectio.opgaveList != undefined) {
@@ -164,8 +169,6 @@ interface OpgaveScreenProps {
 @inject('lectio')
 @observer
 export class OpgaveScreen extends Component<OpgaveScreenProps> {
-  @observable search = '';
-
   async componentDidMount() {
     await this.props.lectio.GetOpgaver();
     console.log(this.props.lectio.opgaveList)
@@ -179,16 +182,6 @@ export class OpgaveScreen extends Component<OpgaveScreenProps> {
       </Stack.Navigator>
     )
   }
-
-  colors = this.props.theme.colors;
-  styles = StyleSheet.create({
-    scrollView: {
-      backgroundColor: 'pink',
-    },
-    text: {
-      fontSize: 42,
-    },
-  });
 }
 
 export default OpgaveScreen;
