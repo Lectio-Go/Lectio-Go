@@ -1,0 +1,7 @@
+{
+  "name": "LectioGo",
+  "displayName": "Lectio Go",
+  "ios": {
+    "userInterfaceStyle": "automatic"
+  }
+}

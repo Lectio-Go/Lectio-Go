@@ -14,7 +14,7 @@ import { inject, observer } from 'mobx-react';
 import SchoolSearchBar from '../components/Login/SchoolSearchBar';
 import ThemeStore, { ThemeProps } from '../stores/ThemeStore';
 import LectioStore from '../stores/LectioStore';
-import { detailedOpgaver, Opgave } from "liblectio/lib/Opaver/opgaver";
+import { DetailedOpgave, detailedOpgaver, Opgave } from "liblectio/lib/Opaver/opgaver";
 import { FlatList } from "react-native-gesture-handler";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Cell, Section, Separator, TableView } from "react-native-tableview-simple";
@@ -215,10 +215,11 @@ interface OpgaveDetailProps {
 @observer
 class OpgaveDetail extends Component<OpgaveDetailProps> {
   @observable opgave = this.props.route.params.opgave as Opgave;
+  @observable detailedOpgave?: DetailedOpgave = undefined;
 
   async componentDidMount() {
-    console.log(JSON.stringify(this.props.theme, null, 4))
-    Object.assign(this.opgave, await detailedOpgaver(this.props.lectio.user, this.props.lectio.requestHelper, this.opgave.id!))
+    this.detailedOpgave = await detailedOpgaver(this.props.lectio.user, this.props.lectio.requestHelper, this.opgave.id!);
+    console.log(JSON.stringify(this.detailedOpgave, null, 4));
   }
 
   render() {
@@ -227,7 +228,7 @@ class OpgaveDetail extends Component<OpgaveDetailProps> {
         <TableView>
           <Section header="INFO OM OPGAVEN">
             <Cell title="Hold" cellAccessoryView={<Text style={this.style.subtitle}>{this.opgave.hold}</Text>} ></Cell>
-            <Cell title="Ansvarlig" cellAccessoryView={<Text style={this.style.subtitle}></Text>}></Cell>
+            <Cell title="Ansvarlig" cellAccessoryView={<Text style={this.style.subtitle}>{this.detailedOpgave?.ansvarlig}</Text>}></Cell>
             <Cell title="Frist" cellAccessoryView={<Text style={this.style.subtitle}>{prettyDate(new Date(this.opgave.frist!))}</Text>} ></Cell>
             <Cell title="Elevtid" cellAccessoryView={<Text style={this.style.subtitle}>{this.opgave.elevtid}</Text>} ></Cell>
             <Cell title="Status" cellAccessoryView={<Text style={this.style.subtitle}>{this.opgave.status}</Text>} ></Cell>
@@ -239,7 +240,7 @@ class OpgaveDetail extends Component<OpgaveDetailProps> {
                 </View>}>
               </Cell>}
             <Cell title="Afventer" cellAccessoryView={<Text style={this.style.subtitle}>{this.opgave.afventer}</Text>} ></Cell>
-            <Cell title="Karakterskala" cellAccessoryView={<Text style={this.style.subtitle}></Text>} ></Cell>
+            <Cell title="Karakterskala" cellAccessoryView={<Text style={this.style.subtitle}>{this.detailedOpgave?.karaterskala}</Text>} ></Cell>
           </Section>
           <View style={{ marginVertical: -6 }}></View>
           <Section header="OPGAVEBESKRIVELSER">

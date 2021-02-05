@@ -1,12 +1,19 @@
 import { observable } from "mobx";
 import { inject, observer } from "mobx-react";
-import React, { Component } from "react";
-import { Button, ScrollView, StyleSheet, View, Text, Dimensions } from "react-native";
-import { PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
+import React, { Component, createRef, RefObject, useRef } from "react";
+import { Button, ScrollView, StyleSheet, View, Text, Dimensions, Route } from "react-native";
+import { FlatList, PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
 import DailySkema from "../components/skema/DailySkema"
 import Lesson from "liblectio/lib/Skema/Timetable"
 import LectioStore from "../stores/LectioStore";
 import ThemeStore from "../stores/ThemeStore";
+import WeeklySkemaPaging from "../components/skema/WeeklySkemaPaging"
+import SkemaTimeStamps from "../components/skema/SkemaTimeStamps"
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { addWeeks, getISOWeek, startOfWeek } from 'date-fns'
+import ViewPagerAdapter from 'react-native-tab-view-viewpager-adapter';
+import ViewPager from "@react-native-community/viewpager";
+import CalendarStrip from 'react-native-calendar-strip'
 
 const { width } = Dimensions.get('window');
 
@@ -15,83 +22,64 @@ interface SkemaScreenProps {
   theme: ThemeStore
 }
 
+const weekTab = createMaterialTopTabNavigator();
+
+
+
 @inject('theme')
 @inject('lectio')
 @observer
 export class SkemaScreen extends Component<SkemaScreenProps> {
-  @observable items: JSX.Element[] = [];
-  @observable weekSkema: Lesson.Lesson[][] = new Array<Array<Lesson.Lesson>>();
-
+  weekSkema: Lesson.Lesson[][] = [[], [], [], [], [], [], []];
+  @observable weeks: Date[] = [];
+  @observable year: number = 0;
+  @observable pageIndex: number = 0;
+  @observable mondayDate: number = 0;
 
   async componentDidMount() {
     //console.log(this.props.lectio.password)
     // Here we should fetch the timetable
-    let now = new Date();
-    let onejan = new Date(now.getFullYear(), 0, 1);
-    let week = 4; //Math.ceil((((now.getTime() - onejan.getTime()) / 86400000) + onejan.getDay() + 1) / 7) - 1;
+    this.pageIndex = new Date().getDay() - 1;
 
-    try {
-      await this.props.lectio.GetBriefLessonList(now.getFullYear(), week);
-    } catch (error) {
-      alert("ERROR: " + error)
+    if (this.pageIndex < 0) {
+      this.pageIndex = 6;
     }
 
-    console.log(JSON.stringify(this.props.lectio.lessonList, null, 4));
-
-    // Here we split the timetable into the 7 days of the week
-    let currentDay = this.props.lectio.lessonList[0].start.getDate();
-    let currentDaySkema: Lesson.Lesson[] = [];
-
-    this.props.lectio.lessonList.map((lesson, i) => {
-      if (i == this.props.lectio.lessonList.length - 1) {
-        this.weekSkema.push([...currentDaySkema]);
-      }
-
-      if (lesson.start.getDate() == currentDay) {
-        currentDaySkema.push(lesson)
-      }
-      else {
-        this.weekSkema.push([...currentDaySkema]);
-        currentDaySkema = [lesson];
-        currentDay = lesson.start.getDate();
-      }
-    })
 
 
-    //console.log(JSON.stringify(this.weekSkema[2], null, 4));
-
+    let now = new Date();
+    let onejan = new Date(now.getFullYear(), 0, 1);
+    this.weeks = [addWeeks(now, -1), now, addWeeks(now, 1)];
+    this.year = now.getFullYear();
   }
+
+  updateWeekList(index: number) {
+    if (index <= 0)
+      this.weeks.unshift(addWeeks(this.weeks[0], -1));
+    else if (index >= this.weeks.length - 1)
+      this.weeks.push(addWeeks(this.weeks[this.weeks.length - 1], 1));
+  }
+
   render() {
     return (
+      <>
 
-      <ScrollView
-        style={{}}
-        //pagingEnabled={true}
-        showsHorizontalScrollIndicator={false}
-        horizontal={true}
-        decelerationRate={'fast'}
-        snapToInterval={width}
-        snapToAlignment={"center"}
-        contentInset={{
-          top: 0,
-          left: 30,
-          bottom: 0,
-          right: 30,
-        }}>
-        {this.props.lectio.lessonList.length < 1 ? <></> :
-          <>
-            {this.weekSkema.length < /*tal som er antal dage i skemaugen*/ this.props.lectio.lessonList[this.props.lectio.lessonList.length - 1].stop.getDate() - this.props.lectio.lessonList[0].start.getDate() + 1
-              ? <></> :
-              <>
-                {this.weekSkema.map((lessons, i) => {
-                  return <DailySkema lessons={lessons} />
-                })}
-              </>
-            }
-          </>
+        {this.year == 0 || this.weeks.length < 2 ? <></> :
+
+           <weekTab.Navigator
+             pager={props => <ViewPagerAdapter {...props} onIndexChange={(index) => this.updateWeekList(index)} />}
+             initialLayout={{ width: width }}
+             initialRouteName={String(getISOWeek(new Date()))}
+             tabBarOptions={{style: {height: 0}}}
+             >
+             {this.weeks.map((week, i) => {
+               return <weekTab.Screen key={String(getISOWeek(week))} name={String(getISOWeek(week))} children={() => <WeeklySkemaPaging pageIndex={this.pageIndex} week={getISOWeek(week)} year={week.getFullYear()} />} />
+             })}
+           </weekTab.Navigator>
+
+
         }
-
-      </ScrollView>
+      </>
     )
   }
 
