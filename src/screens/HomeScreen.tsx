@@ -41,7 +41,7 @@ export class HomeScreen extends Component<{ lectio: LectioStore; theme?: ThemeSt
             backgroundColor={this.props.theme?.colors.background}
           />
         </View>
-        <Tab.Navigator style={{}}>
+        <Tab.Navigator >
           <Tab.Screen name="Skema" component={SkemaScreen} />
           <Tab.Screen name="Lektie" component={LektieScreen} />
           <Tab.Screen name="Opgaver" component={OpgaveScreen} />

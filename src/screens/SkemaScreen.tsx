@@ -1,19 +1,20 @@
-import { observable } from "mobx";
+import { action, observable } from "mobx";
 import { inject, observer } from "mobx-react";
 import React, { Component, createRef, RefObject, useRef } from "react";
-import { Button, ScrollView, StyleSheet, View, Text, Dimensions, Route } from "react-native";
+import { Button, ScrollView, StyleSheet, View, Text, Dimensions, Route, Alert, ViewToken } from "react-native";
 import { FlatList, PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
 import DailySkema from "../components/skema/DailySkema"
-import Lesson from "liblectio/lib/Skema/Timetable"
 import LectioStore from "../stores/LectioStore";
 import ThemeStore from "../stores/ThemeStore";
 import WeeklySkemaPaging from "../components/skema/WeeklySkemaPaging"
 import SkemaTimeStamps from "../components/skema/SkemaTimeStamps"
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { addWeeks, getISOWeek, startOfWeek } from 'date-fns'
+import { addWeeks, getISOWeek, startOfISOWeek, addDays, getISODay } from 'date-fns'
 import ViewPagerAdapter from 'react-native-tab-view-viewpager-adapter';
 import ViewPager from "@react-native-community/viewpager";
-import CalendarStrip from 'react-native-calendar-strip'
+import moment from 'moment'
+import { HentSkemaUge, Lesson, TimetableWeek } from 'liblectio/lib/Skema/Timetable';
+import { v4 as uuidv4 } from 'uuid';
 
 const { width } = Dimensions.get('window');
 
@@ -22,63 +23,76 @@ interface SkemaScreenProps {
   theme: ThemeStore
 }
 
-const weekTab = createMaterialTopTabNavigator();
-
+interface DATA {
+  lessons: Lesson[];
+  id: string;
+}
 
 
 @inject('theme')
 @inject('lectio')
 @observer
 export class SkemaScreen extends Component<SkemaScreenProps> {
-  weekSkema: Lesson.Lesson[][] = [[], [], [], [], [], [], []];
-  @observable weeks: Date[] = [];
-  @observable year: number = 0;
-  @observable pageIndex: number = 0;
-  @observable mondayDate: number = 0;
+
+  skemaUger: TimetableWeek[] = [];
+  @observable Data: DATA[] = [];
+
+  renderItem = ({ item }: { item: DATA }) => (
+    <View style={{ flexDirection: "row" }} key={item.id} >
+      <SkemaTimeStamps start={8} end={17} />
+      <DailySkema lessons={item.lessons} width={width} />
+    </View>
+  )
+
+  scrollRef: RefObject<FlatList<DATA>> = createRef();
+
+  handleViewableItemsChanged(info: { viewableItems: Array<ViewToken>; changed: Array<ViewToken> }) {
+    if (info.changed?.length < 5) {
+      
+    }
+  }
 
   async componentDidMount() {
-    //console.log(this.props.lectio.password)
-    // Here we should fetch the timetable
-    this.pageIndex = new Date().getDay() - 1;
+    let now = new Date();
+    let ugeDatoer = [addWeeks(startOfISOWeek(now), -1), startOfISOWeek(now), addWeeks(startOfISOWeek(now), 1)]
 
-    if (this.pageIndex < 0) {
-      this.pageIndex = 6;
+
+    for (let week of ugeDatoer)
+      this.skemaUger.push(await HentSkemaUge(this.props.lectio.user, this.props.lectio.requestHelper, week.getFullYear(), getISOWeek(week)));
+
+    let temp: DATA[] = [];
+    for (let skemaUge of this.skemaUger) {
+      temp.push({ id: String(skemaUge.year) + String(skemaUge.week) + "mon", lessons: skemaUge.mon })
+      temp.push({ id: String(skemaUge.year) + String(skemaUge.week) + "tue", lessons: skemaUge.tue })
+      temp.push({ id: String(skemaUge.year) + String(skemaUge.week) + "wed", lessons: skemaUge.wed })
+      temp.push({ id: String(skemaUge.year) + String(skemaUge.week) + "thu", lessons: skemaUge.thu })
+      temp.push({ id: String(skemaUge.year) + String(skemaUge.week) + "fri", lessons: skemaUge.fri })
+      temp.push({ id: String(skemaUge.year) + String(skemaUge.week) + "sat", lessons: skemaUge.sat })
+      temp.push({ id: String(skemaUge.year) + String(skemaUge.week) + "sun", lessons: skemaUge.sun })
     }
 
+    this.Data = temp;
 
+    
 
-    let now = new Date();
-    let onejan = new Date(now.getFullYear(), 0, 1);
-    this.weeks = [addWeeks(now, -1), now, addWeeks(now, 1)];
-    this.year = now.getFullYear();
   }
 
-  updateWeekList(index: number) {
-    if (index <= 0)
-      this.weeks.unshift(addWeeks(this.weeks[0], -1));
-    else if (index >= this.weeks.length - 1)
-      this.weeks.push(addWeeks(this.weeks[this.weeks.length - 1], 1));
-  }
 
   render() {
+
     return (
       <>
-
-        {this.year == 0 || this.weeks.length < 2 ? <></> :
-
-           <weekTab.Navigator
-             pager={props => <ViewPagerAdapter {...props} onIndexChange={(index) => this.updateWeekList(index)} />}
-             initialLayout={{ width: width }}
-             initialRouteName={String(getISOWeek(new Date()))}
-             tabBarOptions={{style: {height: 0}}}
-             >
-             {this.weeks.map((week, i) => {
-               return <weekTab.Screen key={String(getISOWeek(week))} name={String(getISOWeek(week))} children={() => <WeeklySkemaPaging pageIndex={this.pageIndex} week={getISOWeek(week)} year={week.getFullYear()} />} />
-             })}
-           </weekTab.Navigator>
-
-
-        }
+        <FlatList
+          ref={this.scrollRef}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          pagingEnabled
+          getItemLayout={(data, index) => (
+            {length: width, offset: width * index, index}
+          )}
+          onViewableItemsChanged={this.handleViewableItemsChanged}
+          initialScrollIndex={7 + getISODay(new Date()) - 1}
+          data={this.Data} keyExtractor={(item) => item.id} renderItem={this.renderItem} />
       </>
     )
   }
