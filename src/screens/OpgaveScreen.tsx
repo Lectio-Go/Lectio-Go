@@ -14,7 +14,7 @@ import { inject, observer } from 'mobx-react';
 import SchoolSearchBar from '../components/Login/SchoolSearchBar';
 import ThemeStore, { ThemeProps } from '../stores/ThemeStore';
 import LectioStore from '../stores/LectioStore';
-import { DetailedOpgave, detailedOpgaver, Opgave } from "liblectio/lib/Opaver/opgaver";
+import { DetailedOpgave, detailedOpgaver, Opgave } from "liblectio/lib/Opgaver/opgaver";
 import { FlatList } from "react-native-gesture-handler";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Cell, Section, Separator, TableView } from "react-native-tableview-simple";

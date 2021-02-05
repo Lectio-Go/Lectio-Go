@@ -5393,10 +5393,10 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-liblectio@0.0.23:
-  version "0.0.23"
-  resolved "https://registry.yarnpkg.com/liblectio/-/liblectio-0.0.23.tgz#e4d2edabdb5d3510b6d8f72db3286ed83d908235"
-  integrity sha512-ay+Ij2HXFCMlNH0hKqR4RC6k9/c0Y3vmz/b3WWeydmRvZRFphmNS50MIV/B3MVqXhcbEEVs4Jz3PbFBxWfNESQ==
+liblectio@0.0.24:
+  version "0.0.24"
+  resolved "https://registry.yarnpkg.com/liblectio/-/liblectio-0.0.24.tgz#c9d6a08f99a79e6384de96c527971e162cf58b72"
+  integrity sha512-0Q/ZExuIhLiNZmOVOjjz9dv05NwetErJ/VxK1fDzI1ekx8ecWsU+Gwfc2/1melkXXVpcDPuXW87AxnBprqKYSA==
   dependencies:
     "@types/request" "^2.48.5"
     axios "^0.19.2"
@@ -6957,11 +6957,6 @@ react-native-slideable-calendar-strip@^0.4.0:
     chinese-lunar "^0.1.4"
     date-fns "^1.29.0"
 
-react-native-status-bar-height@^2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/react-native-status-bar-height/-/react-native-status-bar-height-2.5.0.tgz#bc0fb85230603850aab9667ee8111a62954de90c"
-  integrity sha512-sYBCPYA/NapBSHkdm/IVL4ID3LLlIuLqINi2FBDyMkc2BU9pfSGOtkz9yfxoK39mYJuTrlTOQ7mManARUsYDSA==
-
 react-native-stream@^0.1.0:
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/react-native-stream/-/react-native-stream-0.1.9.tgz#13680cce893ca7d34a86664d9d5b4ee1a772c97c"
@@ -6974,11 +6969,6 @@ react-native-swipe-gestures@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/react-native-swipe-gestures/-/react-native-swipe-gestures-1.0.5.tgz#a172cb0f3e7478ccd681fd36b8bfbcdd098bde7c"
   integrity sha512-Ns7Bn9H/Tyw278+5SQx9oAblDZ7JixyzeOczcBK8dipQk2pD7Djkcfnf1nB/8RErAmMLL9iXgW0QHqiII8AhKw==
-
-react-native-tab-view-viewpager-adapter@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-tab-view-viewpager-adapter/-/react-native-tab-view-viewpager-adapter-1.1.0.tgz#d6e085ed1c91a13e714d87395d428f8afc2b3377"
-  integrity sha512-KLKw+Ay41xAl5F2eRscJd7DHN8JLx06E2lTQJrYAxtBcNKDKfrcYC3wmq7t72DAOBe/6niF0h44c/t/D/AoXsA==
 
 react-native-tab-view@^2.15.2:
   version "2.15.2"
