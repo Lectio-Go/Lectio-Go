@@ -1,6 +1,6 @@
 import { inject, observer } from "mobx-react";
 import React, { Component } from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
+import { View, StyleSheet, Dimensions, ScrollView } from "react-native";
 import ThemeStore from "../../stores/ThemeStore";
 import { Lesson } from "liblectio/lib/Skema/Timetable"
 import SkemaBrik from "../skema/SkemaBrik"
@@ -31,7 +31,7 @@ export default class DailySkema extends Component<DailySkemaProps>{
     render() {
         //console.log(this.schoolStart);
         return (
-            <View style={{ flex: 1, flexDirection: "column", alignItems: "stretch", padding: 0, width: this.props.width - 45 }}>
+            <ScrollView style={{  }} contentContainerStyle={{flex: 1, flexDirection: "column", padding: 0, alignItems: "stretch", width: this.props.width - 45 }}>
                 {this.props.lessons.map((lesson, i) => {
                     let yPos: number = (lesson.start.getTime() - this.schoolStart.getTime()) / (3600 * 1000) * 60;
                     //console.log(yPos);
@@ -42,7 +42,7 @@ export default class DailySkema extends Component<DailySkemaProps>{
                     )
                 })
                 }
-            </View>
+            </ScrollView>
         )
     }
 }
