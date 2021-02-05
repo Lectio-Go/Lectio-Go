@@ -47,6 +47,23 @@ interface OpgaveListProps {
   navigation: NavigationScreenProp<any, any>;
 }
 
+function getArrowColor(end: Date) {
+  // Under 2 dage: Rød
+  // Mellem 2 og 5 dage: Orange
+  // Mellem 5 og 14 dage: Gul
+  // Over 14 dage: ingen farve
+  let diff = end.getTime() - new Date().getTime();
+  let days = diff / 24 / 60 / 60 / 1000;
+
+  if(days < 2)
+    return "red"
+  else if (days < 5)
+    return "#ff8800";
+  else if (days < 14)
+    return "#ffbf00";
+  else 
+    return "";
+}
 
 function getFormattedDuration(start: Date, end: Date): string {
   // Under 1 time:              57 minutter og 47 sekunder
@@ -168,7 +185,7 @@ class OpgaveList extends Component<OpgaveListProps> {
                     return (
                       <Cell key={opgave.id} cellStyle="Subtitle" title={opgave.opgavetitel} detail={opgave.hold+", " + getFormattedDuration(new Date(),  new Date(opgave.frist!))} onPress={() => {
                         this.props.navigation.navigate("Opgavedetalje", { name: opgave.opgavetitel })
-                      }} accessory="DisclosureIndicator" accessoryColorDisclosureIndicator="red"/>
+                      }} accessory="DisclosureIndicator" accessoryColorDisclosureIndicator={getArrowColor(new Date(opgave.frist!))}/>
                     )
                   })}
                 </Section>
