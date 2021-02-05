@@ -30,7 +30,7 @@ export default class ThemeStore {
       this.theme = DefaultTheme;
       this.colors = {...this.theme.colors, greyText: "#909090"}
     }
-    this.colors = {...this.theme.colors, skemaRubrik: "#0080FF"}
+    this.colors = {...this.colors, skemaRubrik: "#0080FF"}
   }
 
   // Themes
