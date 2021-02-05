@@ -40,27 +40,27 @@ export default class App extends Component {
 
   render() {
     return (
-        <SafeAreaProvider>
-          <AppearanceProvider>
-            <Provider {...stores}>
-              <NavigationContainer
-                theme={
-                  stores.theme.colorscheme === 'dark' ? DarkTheme : DefaultTheme
-                }>
-                <OverflowMenuProvider>
-                  <Stack.Navigator initialRouteName={this.initialScreen}>
-                    <Stack.Screen name="Home" component={HomeScreen} options={{ title: "Skema" }} />
-                    <Stack.Screen
-                      name="Login"
-                      component={LoginNavigator}
-                      options={{ headerShown: false }}
-                    />
-                  </Stack.Navigator>
-                </OverflowMenuProvider>
-              </NavigationContainer>
-            </Provider>
-          </AppearanceProvider>
-        </SafeAreaProvider>
+      <SafeAreaProvider>
+        <AppearanceProvider>
+          <Provider {...stores}>
+            <NavigationContainer
+              theme={
+                stores.theme.colorscheme === 'dark' ? DarkTheme : DefaultTheme
+              }>
+              <OverflowMenuProvider>
+                <Stack.Navigator initialRouteName={this.initialScreen}>
+                  <Stack.Screen name="Home" component={HomeScreen} options={{title: "Skema", headerShown: false}}/>
+                  <Stack.Screen
+                    name="Login"
+                    component={LoginNavigator}
+                    options={{headerShown: false}}
+                  />
+                </Stack.Navigator>
+              </OverflowMenuProvider>
+            </NavigationContainer>
+          </Provider>
+        </AppearanceProvider>
+      </SafeAreaProvider>
     );
   }
 }

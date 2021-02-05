@@ -1,0 +1,141 @@
+@startuml
+title Lectio-Go Klassediagram
+
+class App << (A,red) React.Component>> {
+    +initialScreen
+    ==methods==
+    ~render()
+}
+
+class LectioStore << (L,yellow) Provider>> {
+	+username: string
+  	+passworld: string
+  	+school: number
+
+  	+signedIn: boolean
+  	+session: number
+
+    +user: AuthenticatedUser
+    +requestHelper: LectioRequest
+
+    +schoolList: ISchool[]
+    +lessonList: Lesson[]
+    +opgaveList: Opgave[]
+
+	==methods==
+	~GetSchoolList()
+    ~GetBriefLessonList()
+    ~GetOpgaver() 
+    ~isLoggedIn()
+    ~login()
+}
+
+class ThemeStore << (T,green) Provider>> {
+	+colorscheme: ColorSchemeName
+  	+theme: Theme
+  	+colors: Colors
+
+	==methods==
+	~styles()
+}
+
+class HomeScreen  << (H,cyan) React.Component>> {
+    ==props==
+    +lectio: LectioStore
+    ==methods==
+    ~componentDidMount()
+}
+
+class LoginScreen <<(L, pink) React.Component>> {
+    +colors: Colors
+    +styles
+    ==props==
+    +lectio: LectioStore
+    +theme: ThemeStore
+    +navigation: NavigationScreenProp
+    ==methods==
+    ~enableLoginButton()
+    ~componentDidMount()
+    ~getSchoolName()
+    ~render()
+}
+
+class OpgaveList  << (O,blue) React.Component>> {
+    +refreshing: boolean
+    +taskWeeks
+
+    ==props==
+    +lectio: LectioStore
+    +theme: ThemeStore
+    +navigation: NavigationScreenProp
+    ==methods==
+    ~componentDidMount()
+    ~reloadOpgaver()
+    ~onRefresh()
+    ~render()
+}
+
+class OpgaveDetail << (O, orange) React.Component>> {
+    // TODO //
+}
+
+class OpgaveScreen << (O, blue) React.Component>> {
+    ==props==
+    +lectio: LectioStore
+    +theme: ThemeStore
+    +navigation: NavigationScreenProp
+    ==methods==
+    ~componentDidMount()
+    ~render()
+}
+
+class TableView << (T, purple) >> {
+    //imported from react-native-tableview-simple// 
+}
+
+package LibLectio {
+		class CanSat3D << (M,blue) React.Component>> {
+      +roll
+      +pitch
+      ==props==
+      +data: DataStore
+      ==methods==
+      ~calcRoll()
+      ~calcPitch()
+	}
+
+    class Kort << (M,blue) React.Component>> {
+      ==props==
+      +data: DataStore
+      ==methods==
+      ~getLocation()
+	}
+
+    class Telemetry << (M,blue) React.Component>> {
+	}
+
+    class Table << (M,blue) React.Component>> {
+      -tableRef
+      -columns
+      ==props==
+      +title: string
+      +data: DataStore
+	}
+}
+
+skinparam nodesep 100
+LectioStore |o-- App : lectio: LectioStore
+LectioStore |o-- OpgaveScreen : lectio: LectioStore
+LectioStore |o-- OpgaveDetail : lectio: LectioStore
+App -d[hidden]-> LectioStore 
+
+
+App <..> HomeScreen
+App <..> LoginScreen
+
+HomeScreen <..> OpgaveScreen
+OpgaveScreen <..> OpgaveDetail
+OpgaveScreen <..> OpgaveList
+
+
+@enduml

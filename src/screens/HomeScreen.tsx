@@ -19,7 +19,7 @@ export class LektieScreen extends Component {
   render() {
     return (
       <Text>
-        Lektie
+        Lekti
       </Text>
     );
   }
