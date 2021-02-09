@@ -139,7 +139,6 @@ class OpgaveList extends Component<OpgaveListProps> {
   numTaskWeeks = 1;
 
   getTaskWeeks(opgaveList: Opgave[]): { week: number, elevtimer: number, opgaver: Opgave[] }[] {
-    console.log("Start: " + new Date().getTime())
     let tempTaskWeeks: { week: number, elevtimer: number, opgaver: Opgave[] }[] = [];
 
     for (let opgave of filterOpgaveStatus(this.props.route.name, opgaveList)) {
@@ -170,7 +169,6 @@ class OpgaveList extends Component<OpgaveListProps> {
     }
 
     this.numTaskWeeks = tempTaskWeeks.length;
-    console.log("End:   " + new Date().getTime())
     return tempTaskWeeks;
   }
 
