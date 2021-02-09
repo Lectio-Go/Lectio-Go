@@ -183,6 +183,7 @@ class OpgaveList extends Component<OpgaveListProps> {
     // this.refreshing = false;
   }
 
+  
   render() {
     return (
       // <ScrollView style={{ backgroundColor: this.props.theme.colors.background }} bounces={true} refreshControl={
@@ -214,6 +215,11 @@ class OpgaveList extends Component<OpgaveListProps> {
                 {index != this.numTaskWeeks - 1 ? <View key={item.week + " bottom margin"} style={{ marginVertical: -10 }}></View> : <View key={Math.random() * 10000000}></View>}
               </View>
             )}
+            // Tveak these for performance, 
+            // right now they are quite aggresive, to make the emulator run smooth
+            initialNumToRender={5}
+            windowSize={2}
+            maxToRenderPerBatch={1}
           />
         </TableView>
       // </ScrollView>
