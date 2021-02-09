@@ -14,7 +14,7 @@ import { inject, observer } from 'mobx-react';
 import SchoolSearchBar from '../components/Login/SchoolSearchBar';
 import ThemeStore, { ThemeProps } from '../stores/ThemeStore';
 import LectioStore from '../stores/LectioStore';
-import { DetailedOpgave, detailedOpgaver, Opgave } from "liblectio/lib/Opgaver/opgaver";
+import { DetailedOpgave, detailedOpgaver, hentOpgaver, Opgave } from "liblectio/lib/Opgaver/opgaver";
 import { FlatList } from "react-native-gesture-handler";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Cell, Section, Separator, TableView } from "react-native-tableview-simple";
@@ -22,30 +22,39 @@ import { Icon } from "native-base";
 
 const Tab = createMaterialTopTabNavigator();
 
-function OpgaveTabs() {
-  return (
-    <>
-      <View style={{ marginVertical: -5 }}></View>
-      <Tab.Navigator initialRouteName="Venter" tabBarOptions={{ upperCaseLabel: false, labelStyle: { fontSize: 15, fontWeight: "normal", textTransform: "none" } }}>
-        <Tab.Screen name="Alle" component={OpgaveList} options={{ tabBarOptions: { upperCaseLabel: false } }} />
-        <Tab.Screen name="Afleveret" component={OpgaveList} />
-        <Tab.Screen name="Venter" component={OpgaveList} />
-        <Tab.Screen name="Mangler" component={OpgaveList} />
-      </Tab.Navigator>
-    </>
+interface OpgaveTabsProps {
+  lectio: LectioStore
+  theme: ThemeStore;
+  navigation: NavigationScreenProp<any, any>;
+}
 
-  );
+@inject('lectio')
+@inject('theme')
+@observer
+class OpgaveTabs extends Component<OpgaveTabsProps> {
+  @observable completeOpgaveList: Opgave[] = [];
+
+  async componentDidMount() {
+    this.props.lectio.GetOpgaver();
+  }
+
+  render() {
+    return (
+      <>
+        <View style={{ marginVertical: -5 }}></View>
+        <Tab.Navigator initialRouteName="Venter" tabBarOptions={{ upperCaseLabel: false, labelStyle: { fontSize: 15, fontWeight: "normal", textTransform: "none" } }}>
+          <Tab.Screen name="Alle" component={OpgaveList}/>
+          <Tab.Screen name="Afleveret" component={OpgaveList}/>
+          <Tab.Screen name="Venter" component={OpgaveList}/>
+          <Tab.Screen name="Mangler" component={OpgaveList}/>
+        </Tab.Navigator>
+      </>
+    );
+  }
 }
 
 enableScreens();
 const Stack = createNativeStackNavigator();
-
-
-interface OpgaveListProps {
-  lectio: LectioStore;
-  theme: ThemeStore;
-  navigation: NavigationScreenProp<any, any>;
-}
 
 function getArrowColor(end: Date) {
   // Under 2 dage: Rød
@@ -107,83 +116,95 @@ function getFormattedDuration(start: Date, end: Date): string {
   }
 }
 
-@inject('theme')
+interface OpgaveListProps {
+  onRefresh: ()=>Promise<Opgave[]>;
+  theme: ThemeStore;
+  lectio: LectioStore;
+  navigation: NavigationScreenProp<any, any>;
+  route: NavigationParams;
+}
+
+function filterOpgaveStatus(filterType: string ,opgaver: Opgave[]): Opgave[] {
+  console.log("TYPE: " + filterType)
+  return opgaver.filter(opgave => {
+    return opgave.status == filterType || filterType == "Alle";
+  })
+}
+
 @inject('lectio')
+@inject('theme')
 @observer
 class OpgaveList extends Component<OpgaveListProps> {
   @observable refreshing = false;
-  @observable taskWeeks: { week: number, elevtimer: number, opgaver: Opgave[] }[] = [];
+  numTaskWeeks = 1;
 
-  constructor(props: OpgaveListProps) {
-    super(props);
-    // this.props.navigation.setOptions(() => { title: 'Updated!' })
-  }
+  getTaskWeeks(opgaveList: Opgave[]): { week: number, elevtimer: number, opgaver: Opgave[] }[] {
+    console.log("Start: " + new Date().getTime())
+    let tempTaskWeeks: { week: number, elevtimer: number, opgaver: Opgave[] }[] = [];
 
-  reloadOpgaver = () => {
-    if (this.props.lectio != undefined && this.props.lectio.opgaveList != undefined) {
-      let tempTaskWeeks: { week: number, elevtimer: number, opgaver: Opgave[] }[] = [];
+    for (let opgave of filterOpgaveStatus(this.props.route.name, opgaveList)) {
+      if (opgave.frist == undefined)// || new Date(opgave.frist!).getTime() < Date.now())
+        continue;
+      // Get week for opgave
+      let opgaveDate: Date = new Date(opgave.frist!)
+      let onejan = new Date(opgaveDate.getFullYear(), 0, 1);
 
-      for (let opgave of this.props.lectio.opgaveList) {
-        if (opgave.frist == undefined || new Date(opgave.frist!).getTime() < Date.now())
-          continue;
-        // Get week for opgave
-        let opgaveDate: Date = new Date(opgave.frist!)
-        let onejan = new Date(opgaveDate.getFullYear(), 0, 1);
+      let week = differenceInCalendarWeeks(opgaveDate, onejan);
 
-        let week = differenceInCalendarWeeks(opgaveDate, onejan);
+      // Now we check whether this taskweek exists, and add it if it doesnt
+      let taskWeekIndex = -1;
 
-        // Now we check whether this taskweek exists, and add it if it doesnt
-        let taskWeekIndex = -1;
+      tempTaskWeeks.forEach((taskweek, index) => {
+        if (taskweek.week == week)
+          taskWeekIndex = index;
+      })
 
-        tempTaskWeeks.forEach((taskweek, index) => {
-          if (taskweek.week == week)
-            taskWeekIndex = index;
-        })
-
-        if (taskWeekIndex == -1) {
-          tempTaskWeeks.push({ week: week, elevtimer: 0, opgaver: [] });
-          taskWeekIndex = tempTaskWeeks.length - 1;
-        }
-
-        // Now we add the opgave to the taskweek
-        tempTaskWeeks[taskWeekIndex].opgaver.push(opgave);
-        tempTaskWeeks[taskWeekIndex].elevtimer += Number(opgave.elevtid?.replace(',', '.'));
+      if (taskWeekIndex == -1) {
+        tempTaskWeeks.push({ week: week, elevtimer: 0, opgaver: [] });
+        taskWeekIndex = tempTaskWeeks.length - 1;
       }
 
-      this.taskWeeks = tempTaskWeeks;
+      // Now we add the opgave to the taskweek
+      tempTaskWeeks[taskWeekIndex].opgaver.push(opgave);
+      tempTaskWeeks[taskWeekIndex].elevtimer += Number(opgave.elevtid?.replace(',', '.'));
     }
+
+    this.numTaskWeeks = tempTaskWeeks.length;
+    console.log("End:   " + new Date().getTime())
+    return tempTaskWeeks;
   }
 
   async componentDidMount() {
-    observe(this.props.lectio, () => {
-      this.reloadOpgaver()
-    })
+        // this.props.navigation.setOptions(() => { title: 'Updated!' })
   }
 
   onRefresh = async () => {
-    this.refreshing = true;
-    await this.props.lectio.GetOpgaver();
-    this.refreshing = false;
+    // this.reloadOpgaver()
+    // this.refreshing = true;
+    // await this.props.lectio.GetOpgaver();
+    // this.refreshing = false;
   }
 
   render() {
     return (
-      <ScrollView style={{ backgroundColor: this.props.theme.colors.background }} bounces={true} refreshControl={
-        <RefreshControl refreshing={this.refreshing} onRefresh={this.onRefresh} />
-      }>
+      // <ScrollView style={{ backgroundColor: this.props.theme.colors.background }} bounces={true} refreshControl={
+      //   <RefreshControl refreshing={this.refreshing} onRefresh={this.onRefresh} />
+      // }>
         <TableView key={"tableview"} style={{ flex: 1, paddingHorizontal: 1 }}>
           <View key={"top margin"} style={{ marginVertical: -3 }}></View>
-          {this.taskWeeks.map((taskWeek, index: number) => {
-            return (
-              <View key={taskWeek.week + " wrapper"} style={{ marginHorizontal: 5 }}>
-                <Section key={taskWeek.week + " section"}
+          <FlatList
+            data={this.getTaskWeeks(this.props.lectio.opgaveList)}
+            keyExtractor={(item, index) => String(item.week)}
+            renderItem={({ item, index, separators }) => (
+              <View key={item.week + " wrapper"} style={{ marginHorizontal: 5 }}>
+                <Section key={item.week + " section"}
                   headerComponent={(
                     <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", padding: 2 }}>
-                      <Text style={{ color: "#aaaaaa", fontWeight: "bold" }}>{"Uge " + taskWeek.week} </Text>
-                      <Text style={{ color: "#aaaaaa" }}>{taskWeek.elevtimer} elevtime{taskWeek.elevtimer == 1 ? "" : "r"}</Text>
+                      <Text style={{ color: "#aaaaaa", fontWeight: "bold" }}>{"Uge " + item.week} </Text>
+                      <Text style={{ color: "#aaaaaa" }}>{item.elevtimer} elevtime{item.elevtimer == 1 ? "" : "r"}</Text>
                     </View>)}
                   roundedCorners={true} hideSurroundingSeparators={true}>
-                  {taskWeek.opgaver.map((opgave) => {
+                  {item.opgaver.map((opgave) => {
                     return (
                       <Cell key={opgave.id} cellStyle="Subtitle" title={opgave.opgavetitel} detail={opgave.hold + ", " + getFormattedDuration(new Date(), new Date(opgave.frist!))} onPress={() => {
                         this.props.navigation.navigate("Opgavedetalje", { opgave: opgave })
@@ -192,12 +213,12 @@ class OpgaveList extends Component<OpgaveListProps> {
                   })}
                 </Section>
                 {/* Remove spacing in section */}
-                {index != this.taskWeeks.length - 1 ? <View key={taskWeek.week + " bottom margin"} style={{ marginVertical: -10 }}></View> : <View key={Math.random() * 10000000}></View>}
+                {index != this.numTaskWeeks - 1 ? <View key={item.week + " bottom margin"} style={{ marginVertical: -10 }}></View> : <View key={Math.random() * 10000000}></View>}
               </View>
-            )
-          })}
+            )}
+          />
         </TableView>
-      </ScrollView>
+      // </ScrollView>
     )
   }
 }
@@ -272,22 +293,8 @@ class OpgaveDetail extends Component<OpgaveDetailProps> {
   });
 }
 
-interface OpgaveScreenProps {
-  lectio: LectioStore;
-  theme: ThemeStore;
-  navigation: NavigationScreenProp<any, any>;
-}
 
-
-
-@inject('theme')
-@inject('lectio')
-@observer
-export class OpgaveScreen extends Component<OpgaveScreenProps> {
-  async componentDidMount() {
-    await this.props.lectio.GetOpgaver();
-  }
-
+export class OpgaveScreen extends Component {
   render() {
     return (
       <Stack.Navigator initialRouteName="Opgaveliste">

@@ -2920,6 +2920,11 @@ date-fns@^2.11.1:
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.16.1.tgz#05775792c3f3331da812af253e1a935851d3834b"
   integrity sha512-sAJVKx/FqrLYHAQeN7VpJrPhagZc9R4ImZIWYRFZaaohR3KzmuK88touwsSwSVT8Qcbd4zoDsnGfX4GFB4imyQ==
 
+date-fns@^2.17.0:
+  version "2.17.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.17.0.tgz#afa55daea539239db0a64e236ce716ef3d681ba1"
+  integrity sha512-ZEhqxUtEZeGgg9eHNSOAJ8O9xqSgiJdrL0lzSSfMF54x6KXWJiOH/xntSJ9YomJPrYH/p08t6gWjGWq1SDJlSA==
+
 dayjs@^1.8.15:
   version "1.10.4"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.10.4.tgz#8e544a9b8683f61783f570980a8a80eaf54ab1e2"
@@ -5393,10 +5398,10 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-liblectio@0.0.24:
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/liblectio/-/liblectio-0.0.24.tgz#c9d6a08f99a79e6384de96c527971e162cf58b72"
-  integrity sha512-0Q/ZExuIhLiNZmOVOjjz9dv05NwetErJ/VxK1fDzI1ekx8ecWsU+Gwfc2/1melkXXVpcDPuXW87AxnBprqKYSA==
+liblectio@0.0.29:
+  version "0.0.29"
+  resolved "https://registry.yarnpkg.com/liblectio/-/liblectio-0.0.29.tgz#3322384f9d45adf136ace5f4cb643c4f7159095c"
+  integrity sha512-ljBlpqmzBSKStj8noP0rP8Pvzi17e3H5l3Cs4hG+Ty6o4Q/fcbKDxX46JWvQ6hZP24aGQvlcmWHRP1uNArxQ9w==
   dependencies:
     "@types/request" "^2.48.5"
     axios "^0.19.2"

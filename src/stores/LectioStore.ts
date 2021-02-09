@@ -25,6 +25,7 @@ export default class LectioStore {
     this.schoolList = await GetAllSchools();
   }
 
+  // Skema
   @observable skemaUge: TimetableWeek = {
     year: 0,
     week: 0,
@@ -43,11 +44,14 @@ export default class LectioStore {
     this.skemaUge = await HentSkemaUge(this.user, this.requestHelper, year, week);
   }
 
+  // Opgaver
   @observable opgaveList: Opgave[] = [];
   async GetOpgaver() {
+    console.log("Getting opgaver")
     this.opgaveList = await hentOpgaver(this.user, this.requestHelper);
   }
 
+  // Login
   async isLoggedIn(): Promise<boolean> {
     console.log("Hello");
     const credentials = await Keychain.getGenericPassword();
