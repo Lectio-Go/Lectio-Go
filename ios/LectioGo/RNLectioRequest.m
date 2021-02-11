@@ -10,8 +10,13 @@
 
 RCT_EXTERN_METHOD(GetLectio: (NSString)url
                   withCallback: (RCTResponseSenderBlock)callback)
-
 RCT_EXTERN_METHOD(PostLectio: (NSString)url
                   withBody:(NSDictionary *)body
+                  withCallback:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(UploadLectio: (NSString)url
+                  withFilename:(NSString)filename
+                  withData: (NSString)data
+                  withCallback:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(DownloadLectio: (NSString)url
                   withCallback:(RCTResponseSenderBlock)callback)
 @end

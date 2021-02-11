@@ -40,6 +40,41 @@ class RNLectioRequest: NSObject {
   }
   
   @objc
+  func UploadLectio(_ url: String,
+                   withFilename filename: String,
+                   withData data: String,
+                   withCallback callback: @escaping RCTResponseSenderBlock) {
+    guard let binData = Data(base64Encoded: data) else {
+      callback(["", "", "error: could not parse base64 string"])
+      return
+    }
+    
+    AF.upload(multipartFormData: { multipartFormData in
+      multipartFormData.append(binData, withName: "file", fileName: filename, mimeType: "*")
+    }, to: url).response { response in
+      switch response.result {
+      case .success(let data):
+        let utf8Text = String(data: data!, encoding: .utf8)!
+        callback([utf8Text, response.response?.allHeaderFields as Any, "success"])
+      case .failure(let error):
+        callback(["", "", error.errorDescription as Any])
+      }
+    }
+  }
+  
+  @objc
+  func DownloadLectio(_ url: String,
+                   withCallback callback: @escaping RCTResponseSenderBlock) {
+    AF.download(url).responseData { response in
+      if let data = response.value {
+        callback([data.base64EncodedString(), "", "success"])
+      }
+      else {
+        callback(["", "", "error: Failed to download file"])
+      }
+    }
+  }
+  @objc
   static func requiresMainQueueSetup() -> Bool {
       return true
   }
