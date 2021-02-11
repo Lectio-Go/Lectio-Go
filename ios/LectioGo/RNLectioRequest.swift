@@ -63,6 +63,18 @@ class RNLectioRequest: NSObject {
   }
   
   @objc
+  func DownloadLectio(_ url: String,
+                   withCallback callback: @escaping RCTResponseSenderBlock) {
+    AF.download(url).responseData { response in
+      if let data = response.value {
+        callback([data.base64EncodedString(), "", "success"])
+      }
+      else {
+        callback(["", "", "error: Failed to download file"])
+      }
+    }
+  }
+  @objc
   static func requiresMainQueueSetup() -> Bool {
       return true
   }
