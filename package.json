@@ -9,9 +9,11 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@react-native-community/viewpager": "^4.2.2",
     "@react-navigation/material-top-tabs": "^5.3.13",
     "date-fns": "^2.17.0",
-    "liblectio": "0.0.29",
+    "js-base64": "^3.6.0",
+    "liblectio": "0.0.30",
     "mobx": "^5.0.1",
     "mobx-react": "^5.0.0",
     "native-base": "^2.15.2",
@@ -23,6 +25,7 @@
     "react-native-collapsible-header-views": "^1.1.2",
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-gesture-handler": "^1.9.0",
+    "react-native-infinite-swiper": "^1.0.1",
     "react-native-ionicons": "^4.x",
     "react-native-keychain": "^6.2.0",
     "react-native-material-ui": "^1.30.1",
@@ -31,6 +34,7 @@
     "react-native-screens": "2.11.0",
     "react-native-search-bar": "^3.5.1",
     "react-native-slideable-calendar-strip": "^0.4.0",
+    "react-native-swiper": "^1.6.0-rc.3",
     "react-native-tab-view": "^2.15.2",
     "react-native-tableview-simple": "^4.2.1",
     "react-native-vector-icons": "^7.1.0",

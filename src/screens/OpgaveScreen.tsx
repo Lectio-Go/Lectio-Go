@@ -18,7 +18,8 @@ import { DetailedOpgave, detailedOpgaver, hentOpgaver, Opgave } from "liblectio/
 import { FlatList } from "react-native-gesture-handler";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Cell, Section, Separator, TableView } from "react-native-tableview-simple";
-import { Icon } from "native-base";
+import Icon from "react-native-vector-icons/Ionicons";
+import { encode } from "js-base64";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -172,26 +173,23 @@ class OpgaveList extends Component<OpgaveListProps> {
     return tempTaskWeeks;
   }
 
-  async componentDidMount() {
-        // this.props.navigation.setOptions(() => { title: 'Updated!' })
-  }
-
   onRefresh = async () => {
-    // this.reloadOpgaver()
-    // this.refreshing = true;
-    // await this.props.lectio.GetOpgaver();
-    // this.refreshing = false;
+    this.refreshing = true;
+    await this.props.lectio.GetOpgaver();
+    this.refreshing = false;
   }
-
   
   render() {
     return (
-      // <ScrollView style={{ backgroundColor: this.props.theme.colors.background }} bounces={true} refreshControl={
-      //   <RefreshControl refreshing={this.refreshing} onRefresh={this.onRefresh} />
-      // }>
         <TableView key={"tableview"} style={{ flex: 1, paddingHorizontal: 1 }}>
           <View key={"top margin"} style={{ marginVertical: -3 }}></View>
           <FlatList
+            refreshControl={
+              <RefreshControl
+                refreshing={this.refreshing}
+                onRefresh={this.onRefresh}
+              />
+            }
             data={this.getTaskWeeks(this.props.lectio.opgaveList)}
             keyExtractor={(item, index) => String(item.week)}
             renderItem={({ item, index, separators }) => (
@@ -222,7 +220,6 @@ class OpgaveList extends Component<OpgaveListProps> {
             maxToRenderPerBatch={1}
           />
         </TableView>
-      // </ScrollView>
     )
   }
 }
@@ -253,7 +250,7 @@ class OpgaveDetail extends Component<OpgaveDetailProps> {
         <TableView>
           <Section header="INFO OM OPGAVEN">
             <Cell title="Hold" cellAccessoryView={<Text style={this.style.subtitle}>{this.opgave.hold}</Text>} ></Cell>
-            <Cell title="Ansvarlig" cellAccessoryView={<Text style={this.style.subtitle}>{this.detailedOpgave?.ansvarlig}</Text>}></Cell>
+            <Cell title="Ansvarlig" cellAccessoryView={<Text style={this.style.subtitle}>{this.detailedOpgave?.ansvarlig?.teacherName + " (" +this.detailedOpgave?.ansvarlig?.teacherInitials + ")" }</Text>}></Cell>
             <Cell title="Frist" cellAccessoryView={<Text style={this.style.subtitle}>{prettyDate(new Date(this.opgave.frist!))}</Text>} ></Cell>
             <Cell title="Elevtid" cellAccessoryView={<Text style={this.style.subtitle}>{this.opgave.elevtid}</Text>} ></Cell>
             <Cell title="Status" cellAccessoryView={<Text style={this.style.subtitle}>{this.opgave.status}</Text>} ></Cell>
@@ -273,7 +270,26 @@ class OpgaveDetail extends Component<OpgaveDetailProps> {
           </Section>
           <View style={{ marginVertical: -6 }}></View>
           <Section header="OPGAVEINDLÆG">
-            <Cell title="Yeet" ></Cell>
+            {this.detailedOpgave?.indlæg?.map((val, index)=> (
+              <Cell title="Opgavenote" cellStyle="Subtitle" onPress={()=> {
+                (async () => {
+                  if(val.dokument == undefined || val.dokument.url == undefined)
+                  return;
+                console.log((await this.props.lectio.requestHelper.GetLectio(val.dokument.url)).headers)
+                })()
+              }} cellContentView={
+                <View style={{ paddingVertical: 6 }}>
+                  <Text style={this.style.detail}>{prettyDate(val.tidspunkt)}</Text>
+                  <Text style={this.style.name}>{val.bruger.studentName}</Text>
+                  <Text style={this.style.link}>{val.dokument?.navn}</Text>
+                </View>}>
+              </Cell>
+              ))}
+              <Cell cellStyle="RightDetail" title={"Nyt indlæg"} onPress={()=> {
+                console.log("Sike")
+              }} accessory="DisclosureIndicator" cellAccessoryView={
+                 <Icon name="add" size={24} style={{ color: this.props.theme.colors.primary }}/>
+              }/>
           </Section>
         </TableView>
       </ScrollView>
@@ -293,6 +309,15 @@ class OpgaveDetail extends Component<OpgaveDetailProps> {
     ,
     subtitle: {
       color: this.props.theme.colors.greyText,
+    },
+    link: {
+      color: this.props.theme.colors.primary,
+      fontSize: 14,
+      fontWeight: "bold"
+    },
+    name: {
+      color: this.props.theme.colors.text,
+      fontSize: 12,
     }
   });
 }

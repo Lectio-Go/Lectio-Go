@@ -15,34 +15,34 @@ interface DailySkemaProps {
 @inject('theme')
 @observer
 export default class DailySkema extends Component<DailySkemaProps>{
-    @observable schoolStart: Date = new Date(
-        this.props.lessons[0].start.getFullYear(),
-        this.props.lessons[0].start.getMonth(),
-        this.props.lessons[0].start.getDate(),
-        8,
-        0,
-        0,
-        0
-    );
 
     async componentDidMount() {
 
     }
     render() {
-        //console.log(this.schoolStart);
+
         return (
-            <ScrollView style={{  }} contentContainerStyle={{flex: 1, flexDirection: "column", padding: 0, alignItems: "stretch", width: this.props.width - 45 }}>
+            <View style={{ flex: 1, flexDirection: "column", padding: 0, alignItems: "stretch", width: this.props.width - 45 }}>
                 {this.props.lessons.map((lesson, i) => {
-                    let yPos: number = (lesson.start.getTime() - this.schoolStart.getTime()) / (3600 * 1000) * 60;
-                    //console.log(yPos);
+                    let schoolStart = new Date(
+                        lesson.start.getFullYear(),
+                        lesson.start.getMonth(),
+                        lesson.start.getDate(),
+                        8,
+                        0,
+                        0,
+                        0
+                    );
+
+                    let yPos: number = (lesson.start.getTime() - schoolStart.getTime()) / (3600 * 1000) * 60;
                     return (
-                        <View key={lesson.lessonId} style={{ position: "absolute", top: yPos, width: this.props.width - 45, paddingLeft: 10, paddingRight: 10, paddingTop: 10}} >
+                        <View key={lesson.lessonId} style={{ position: "absolute", top: yPos, width: this.props.width - 45, paddingLeft: 10, paddingRight: 10, paddingTop: 10 }} >
                             <SkemaBrik lesson={lesson} />
                         </View>
                     )
                 })
                 }
-            </ScrollView>
+            </View>
         )
     }
 }
