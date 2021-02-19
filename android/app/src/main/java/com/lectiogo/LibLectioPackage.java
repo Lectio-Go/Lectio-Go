@@ -16,6 +16,7 @@ public class LibLectioPackage implements ReactPackage {
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
         modules.add(new RNLectioRequest(reactContext));
+        modules.add(new ScrollViewMagicModule(reactContext));
         return modules;
     }
 
