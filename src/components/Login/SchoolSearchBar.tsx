@@ -10,9 +10,10 @@ export default class SchoolSearchBar extends Component<{ theme?: ThemeStore, onC
     render() {
       return (
         <SearchBar
+          barTintColor={this.props.theme?.colors.background}
           searchBarStyle="default"
           placeholder="Search"
-          textColor={this.props.theme!.colors.text}
+          textColor="black"
           onChangeText={this.props.onChangeText}
         />
       )

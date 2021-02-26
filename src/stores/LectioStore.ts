@@ -1,11 +1,11 @@
 import {observable, computed, action} from 'mobx';
 import * as Keychain from 'react-native-keychain';
-import {AuthenticatedUser, GetAllSchools, ISchool, GetBriefTimetable} from 'liblectio';
+import {AuthenticatedUser, GetAllSchools, ISchool, } from 'liblectio';
 import {LectioRequest} from 'liblectio/lib/LectioRequest';
 import {RNRequest} from '../RNLectioRequest';
-import { Lesson } from 'liblectio/lib/Skema/Timetable';
+import { HentSkemaUge, Lesson, TimetableWeek } from 'liblectio/lib/Skema/Timetable';
 import { cos } from 'react-native-reanimated';
-import { hentOpgaver, Opgave } from 'liblectio/lib/Opaver/opgaver';
+import { hentOpgaver, Opgave } from 'liblectio/lib/Opgaver/opgaver';
 
 
 
@@ -25,17 +25,33 @@ export default class LectioStore {
     this.schoolList = await GetAllSchools();
   }
 
-  @observable lessonList: Lesson[] = [];
-  @action async GetBriefLessonList(year: number, week: number) {
+  // Skema
+  @observable skemaUge: TimetableWeek = {
+    year: 0,
+    week: 0,
+    mon: [],
+    tue: [],
+    wed: [],
+    thu: [],
+    fri: [],
+    sat: [],
+    sun: [],
+    dailyMessage: [],
+    moduleTimes: []
+}
+  @action async GetSkemaUge(year: number, week: number) {
     // We should check whether we are logged in before making an api request
-    this.lessonList = await (await GetBriefTimetable(this.user, this.requestHelper, year, week)).lessons;
+    this.skemaUge = await HentSkemaUge(this.user, this.requestHelper, year, week);
   }
 
+  // Opgaver
   @observable opgaveList: Opgave[] = [];
-  @action async GetOpgaver() {
+  async GetOpgaver() {
+    console.log("Getting opgaver")
     this.opgaveList = await hentOpgaver(this.user, this.requestHelper);
   }
 
+  // Login
   async isLoggedIn(): Promise<boolean> {
     console.log("Hello");
     const credentials = await Keychain.getGenericPassword();
@@ -76,13 +92,5 @@ export default class LectioStore {
         resolve(`ERROR: ${error.message}`);
       });
     });
-  }
-
-  @action async indlæsLectioSkema() {
-    try {
-      throw new Error('indlæsLectioSkema is not Implemented');
-    } catch (e) {
-      console.log(e);
-    }
   }
 }
