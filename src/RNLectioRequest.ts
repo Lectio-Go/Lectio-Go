@@ -54,7 +54,7 @@ export class RNRequest extends LectioRequest {
       );
     });
   }
-
+  
   async DownloadLectio(url: string): Promise<LectioResponse> {
     return new Promise(async (resolve, reject) => {
       RNLectioRequest.DownloadLectio(
@@ -69,4 +69,5 @@ export class RNRequest extends LectioRequest {
       );
     });
   }
+
 }
