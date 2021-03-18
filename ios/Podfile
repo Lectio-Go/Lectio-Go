@@ -8,7 +8,6 @@ target 'LectioGo' do
   use_react_native!(:path => config["reactNativePath"])
   pod 'Alamofire', '~> 5.2'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-  pod 'react-native-viewpager', :path => '../node_modules/@react-native-community/viewpager'
 
   target 'LectioGoTests' do
     inherit! :complete

@@ -30,7 +30,10 @@ export class LektieScreen extends Component {
 export class HomeScreen extends Component<{ lectio: LectioStore; theme?: ThemeStore }> {
   async componentDidMount() {
     // First we should check if the login credentials we are given are correct
+<<<<<<< HEAD
 
+=======
+>>>>>>> 62393eaf89c06b4e55351bf5b87d5e323bce907c
   }
 
   render() {
